@@ -1,298 +1,260 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion, useAnimation, useScroll, useTransform } from "framer-motion";
-
-// --- ASSETS & SHAPES ---
+import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import ContactUs from "./CotactUs";
 
 const AsteriskShape = () => (
-    <div className="w-full h-full bg-[#e6ff57] relative flex items-center justify-center overflow-hidden">
-        <div className="absolute w-[12%] h-[60%] bg-[#b0b0b0]" />
-        <div className="absolute w-[12%] h-[60%] bg-[#b0b0b0] rotate-90" />
-        <div className="absolute w-[12%] h-[60%] bg-[#b0b0b0] rotate-45" />
-        <div className="absolute w-[12%] h-[60%] bg-[#b0b0b0] -rotate-45" />
-        <div className="absolute w-[24%] h-[24%] bg-[#e6ff57] z-10" />
+    <div className="w-full h-full bg-[#ccff00] relative flex items-center justify-center overflow-hidden">
+        <div className="absolute w-[15%] h-[70%] bg-[#b0b0b0]" />
+        <div className="absolute w-[15%] h-[70%] bg-[#b0b0b0] rotate-90" />
+        <div className="absolute w-[15%] h-[70%] bg-[#b0b0b0] rotate-45" />
+        <div className="absolute w-[15%] h-[70%] bg-[#b0b0b0] -rotate-45" />
     </div>
 );
 
-const FourHexagons = () => {
-    const hexPath = "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
-    return (
-        <div className="w-full h-full relative grid grid-cols-2 grid-rows-2 gap-1 p-1">
-            {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="bg-black w-full h-full" style={{ clipPath: hexPath }} />
-            ))}
-        </div>
-    );
-};
+const ClusterShape = () => (
+    <div className="w-full h-full bg-transparent grid grid-cols-2 grid-rows-2 gap-1 p-1">
+        <div className="bg-black" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" }}></div>
+        <div className="bg-black" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" }}></div>
+        <div className="bg-black" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" }}></div>
+        <div className="bg-black" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" }}></div>
+    </div>
+);
 
-const ArrowShape = () => {
-    const decagonPath = "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)";
-    return (
-        <div className="w-full h-full bg-black flex items-center justify-center" style={{ clipPath: decagonPath }}>
-            <svg width="55%" height="55%" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="square" />
-            </svg>
-        </div>
-    );
-};
+const ArrowIconShape = () => (
+    <div className="w-full h-full bg-black flex items-center justify-center" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)" }}>
+        <svg width="60%" height="60%" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+            <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="square" strokeLinejoin="miter" />
+        </svg>
+    </div>
+);
 
-// --- COMPONENTS ---
+const SmallLabel = ({ children, className = "" }) => (
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3, duration: 1 }}
+        className={`absolute font-sans text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest leading-tight ${className}`}
+    >
+        {children}
+    </motion.div>
+);
 
-const SmallLabel = ({ children, className = "", delay = 0 }) => {
-    const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => setIsMounted(true), []);
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={isMounted ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ delay, duration: 0.8 }}
-            className={`absolute text-[10px] md:text-[11px] font-bold text-gray-500 uppercase tracking-widest leading-tight whitespace-nowrap ${className}`}
-        >
-            {children}
-        </motion.div>
-    );
-};
 
-export default function Hero() {
-    const { scrollY } = useScroll();
+function MorphingModal({ isOpen, onClose, initialPos }) {
+    const [mounted, setMounted] = useState(false);
+    const [status, setStatus] = useState("button");
+    const [showContent, setShowContent] = useState(false);
+    const isClosingRef = useRef(false);
 
-    // SCROLL EFFECTS
-    const scrollExitLeft = useTransform(scrollY, [0, 600], [0, -600]);
-    const scrollExitRight = useTransform(scrollY, [0, 600], [0, 600]);
-    const scrollOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-    const scrollScale = useTransform(scrollY, [0, 600], [1, 0.95]);
-
-    const shapeScale = useTransform(scrollY, [0, 600], [1, 0.5]);
-    const shapeOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-    // Determine screen size for responsive coordinates
-    const [layout, setLayout] = useState({
-        row1: { x: 33, y: -148 },
-        row2: { x: -143, y: 0 },
-        row3: { x: 77, y: 148 },
-    });
+    useEffect(() => { setMounted(true); }, []);
 
     useEffect(() => {
-        const updateLayout = () => {
-            if (window.innerWidth >= 1024) {
-                // Desktop (lg)
-                setLayout({
-                    // row1.x reduced from 45 to 10 to move the shape/gap to the left
-                    row1: { x: 10, y: -154 },
-                    row2: { x: -160, y: 0 },
-                    row3: { x: 88, y: 154 },
-                });
-            } else if (window.innerWidth >= 768) {
-                // Tablet (md)
-                setLayout({
-                    row1: { x: 10, y: -115 },
-                    row2: { x: -121, y: 0 },
-                    row3: { x: 66, y: 115 },
-                });
-            } else {
-                // Mobile
-                setLayout({
-                    row1: { x: 5, y: -88 },
-                    row2: { x: -88, y: 0 },
-                    row3: { x: 44, y: 88 },
-                });
-            }
-        };
+        if (isOpen && initialPos) {
+            isClosingRef.current = false;
+            document.body.style.overflow = "hidden";
+            setStatus("button");
+            const t1 = setTimeout(() => setStatus("center"), 20);
+            const t2 = setTimeout(() => setStatus("pillar"), 550);
+            const t3 = setTimeout(() => setStatus("modal"), 1100);
+            const t4 = setTimeout(() => setShowContent(true), 1650);
+            return () => {
+                clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
+            };
+        } else {
+            document.body.style.overflow = "unset";
+            setStatus("button");
+            setShowContent(false);
+        }
+    }, [isOpen, initialPos]);
 
-        updateLayout();
-        window.addEventListener("resize", updateLayout);
-        return () => window.removeEventListener("resize", updateLayout);
-    }, []);
-
-    const controls = {
-        leftShape: useAnimation(),
-        centerShape: useAnimation(),
-        rightShape: useAnimation(),
-        textRow1Left: useAnimation(),
-        textRow1Right: useAnimation(),
-        textRow2Left: useAnimation(),
-        textRow2Right: useAnimation(),
-        textRow3Left: useAnimation(),
-        textRow3Right: useAnimation(),
-        button: useAnimation(),
+    const handleClose = () => {
+        if (isClosingRef.current) return;
+        isClosingRef.current = true;
+        setShowContent(false);
+        setStatus("pillar");
+        setTimeout(() => {
+            setStatus("center");
+            setTimeout(() => {
+                setStatus("button");
+                setTimeout(() => {
+                    onClose();
+                    isClosingRef.current = false;
+                }, 500);
+            }, 550);
+        }, 550);
     };
 
     useEffect(() => {
-        const sequence = async () => {
-            // 1. CONVERGENCE
-            await Promise.all([
-                controls.centerShape.start({ opacity: 1, scale: 1, transition: { duration: 0.5 } }),
-                controls.leftShape.start({ x: -145, opacity: 1, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }),
-                controls.rightShape.start({ x: 145, opacity: 1, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }),
-            ]);
+        if (!isOpen) return;
 
-            await new Promise((r) => setTimeout(r, 400));
-
-            // 2. SCATTER (Using dynamic layout state)
-            await Promise.all([
-                controls.leftShape.start({ x: layout.row1.x, y: layout.row1.y, transition: { duration: 1.2, ease: "easeInOut" } }),
-                controls.centerShape.start({ x: layout.row2.x, y: layout.row2.y, transition: { duration: 1.2, ease: "easeInOut" } }),
-                controls.rightShape.start({ x: layout.row3.x, y: layout.row3.y, transition: { duration: 1.2, ease: "easeInOut" } }),
-            ]);
-
-            // 3. TEXT REVEAL
-            const textEase = [0.16, 1, 0.3, 1];
-            const textDur = 1;
-
-            controls.textRow1Left.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-            controls.textRow1Right.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-
-            await new Promise((r) => setTimeout(r, 100));
-            controls.textRow2Left.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-            controls.textRow2Right.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-
-            await new Promise((r) => setTimeout(r, 100));
-            controls.textRow3Left.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-            controls.textRow3Right.start({ x: 0, opacity: 1, transition: { duration: textDur, ease: textEase } });
-
-            controls.button.start({ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 200 } });
+        const handleScrollAttempt = () => {
+            handleClose();
         };
 
-        sequence();
-    }, [layout]);
+        window.addEventListener('wheel', handleScrollAttempt, { passive: true });
+        window.addEventListener('touchmove', handleScrollAttempt, { passive: true });
 
-    // Typography Styles - Increased by ~10%
-    const textClass = "text-[14.5vw] md:text-[7.2rem] lg:text-[9.4rem] leading-[0.8] font-black tracking-tighter scale-y-110";
+        return () => {
+            window.removeEventListener('wheel', handleScrollAttempt);
+            window.removeEventListener('touchmove', handleScrollAttempt);
+        };
+    }, [isOpen]);
 
-    // Shape/Spacer Sizes - Increased by ~10%
-    const shapeSizeClass = "w-[88px] h-[88px] md:w-[122px] md:h-[122px] lg:w-[154px] lg:h-[154px]";
-    const spacerSizeClass = "w-[88px] md:w-[122px] lg:w-[154px] shrink-0 h-22";
+    if (!mounted || !initialPos) return null;
+
+    const variants = {
+        button: { top: initialPos.top, left: initialPos.left, width: initialPos.width, height: initialPos.height, x: 0, y: 0, borderRadius: "9999px", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } },
+        center: { top: "50%", left: "50%", x: "-50%", y: "-50%", width: initialPos.height, height: initialPos.height, borderRadius: "9999px", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } },
+        pillar: { top: 0, left: "50%", x: "-50%", y: 0, width: initialPos.height, height: "100vh", borderRadius: "0px", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } },
+        modal: { top: 0, left: "50%", x: "-50%", y: 0, width: "100vw", height: "100vh", borderRadius: "0px", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } }
+    };
+
+    return createPortal(
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-[100] pointer-events-none">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-md pointer-events-auto" onClick={handleClose} />
+                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ccff00] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
+                        <AnimatePresence mode="wait">
+
+                            {status === "modal" && showContent && (
+                                <motion.div key="content" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 0.5, ease: "easeOut" }} className="w-full h-full">
+                                    <ContactUs isOpen={true} onClose={handleClose} />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>,
+        document.body
+    );
+}
+
+export default function App() {
+    const { scrollY } = useScroll();
+    const yText = useTransform(scrollY, [0, 500], [0, 100]);
+    const scaleText = useTransform(scrollY, [0, 500], [1, 0.95]);
+    const opacityText = useTransform(scrollY, [0, 300], [1, 0]);
+
+    const [isContactOpen, setIsContactOpen] = useState(false);
+    const [buttonPos, setButtonPos] = useState(null);
+    const buttonRef = useRef(null);
+
+    const handleOpenContact = (e) => {
+        e.stopPropagation();
+        if (buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setButtonPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+            setIsContactOpen(true);
+        }
+    };
+
+    const fontClass = "font-bebas text-[18vw] md:text-[8rem] lg:text-[11rem] leading-[0.85] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
+    const shapeWrapper = "w-[16vw] h-[16vw] md:w-[7rem] md:h-[7rem] lg:w-[9rem] lg:h-[9rem] mx-2 md:mx-4 shrink-0 self-center z-20";
+
+    const getComplexAnimation = (id) => {
+        let initialX = 0;
+        let initialY = 0;
+        let midX = 0;
+
+        if (id === "icon1") {
+            initialX = 2000;
+            midX = "-22vw";
+        }
+        if (id === "icon2") {
+            initialX = -2000;
+            midX = "0vw";
+        }
+        if (id === "icon3") {
+            initialY = 2000;
+            midX = "22vw";
+        }
+
+        return {
+            initial: { x: initialX, y: initialY, opacity: 0, scale: 0.4, rotate: -45 },
+            animate: {
+                x: [initialX, midX, 0],
+                y: [initialY, 0, 0],
+                opacity: [0, 1, 1],
+                scale: [0.4, 1.1, 1],
+                rotate: [-45, 0, 0]
+            },
+            transition: {
+                duration: 2.8,
+                times: [0, 0.45, 1],
+                ease: [0.76, 0, 0.24, 1],
+                delay: 0.2
+            }
+        };
+    };
+
+    const textFade = {
+        initial: { opacity: 0, y: 40, filter: "blur(10px)" },
+        animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+        transition: { duration: 1, delay: 2.4, ease: [0.22, 1, 0.36, 1] }
+    };
 
     return (
-        <div className="relative w-full min-h-[100vh] bg-[#d6d6d6] overflow-x-hidden font-sans selection:bg-[#e6ff57] selection:text-black">
+        <div className="relative w-full min-h-screen bg-[#e0e0e0] overflow-x-hidden selection:bg-[#ccff00] selection:text-black">
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
-            <section className="relative h-screen w-full flex items-center justify-center overflow-hidden sticky top-0">
-
-                {/* === SHAPE LAYER === */}
-                <motion.div
-                    style={{ opacity: shapeOpacity, scale: shapeScale }}
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
-                >
-                    {/* Row 1 Shape */}
-                    <motion.div
-                        initial={{ x: -1000, opacity: 0 }}
-                        animate={controls.leftShape}
-                        className={`absolute ${shapeSizeClass}`}
-                    >
-                        <AsteriskShape />
+            <motion.div
+                style={{ y: yText, scale: scaleText, opacity: opacityText }}
+                className="w-full h-screen md:min-h-screen flex flex-col items-center justify-evenly md:justify-center md:gap-4 py-20 md:py-0"
+            >
+                <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center">
+                        <motion.span {...textFade} className={fontClass}>TRANS</motion.span>
+                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon1")}>
+                            <AsteriskShape />
+                        </motion.div>
+                        <motion.span {...textFade} className={fontClass}>FORMING</motion.span>
                     </motion.div>
-
-                    {/* Row 2 Shape */}
-                    <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={controls.centerShape}
-                        className={`absolute ${shapeSizeClass}`}
-                    >
-                        <FourHexagons />
-                    </motion.div>
-
-                    {/* Row 3 Shape */}
-                    <motion.div
-                        initial={{ x: 1000, opacity: 0 }}
-                        animate={controls.rightShape}
-                        className={`absolute ${shapeSizeClass}`}
-                    >
-                        <ArrowShape />
-                    </motion.div>
-                </motion.div>
-
-                {/* === TEXT GRID LAYER === */}
-                <div className="relative z-30 w-full flex flex-col items-center justify-center pointer-events-none gap-0">
-
-                    {/* ROW 1: TRANS [GAP] FORMING */}
-                    <div
-                        className="flex items-center justify-center w-full relative"
-                        style={{ transform: `translateX(${layout.row1.x}px)` }}
-                    >
-                        <motion.div style={{ x: scrollExitLeft, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: -800, opacity: 0 }} animate={controls.textRow1Left} className="relative flex items-center">
-                                <h1 className={`${textClass} text-white`}>TRANS</h1>
-                                <SmallLabel className="right-[102%] top-[50%] -translate-y-1/2 text-right w-max hidden md:block" delay={3}>
-                                    WEB & APP<br />DEVELOPMENT
-                                </SmallLabel>
-                            </motion.div>
-                        </motion.div>
-
-                        {/* SPACER */}
-                        <div className={spacerSizeClass} />
-
-                        <motion.div style={{ x: scrollExitRight, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: 800, opacity: 0 }} animate={controls.textRow1Right} className="relative flex items-center">
-                                <h1 className={`${textClass} text-white`}>FORMING</h1>
-                                <SmallLabel className="left-1 bottom-[100%] mb-2 text-left w-max hidden md:block text-[#888]" delay={3.2}>
-                                    CUSTOM AI SOLUTIONS<br />& INTEGRATION
-                                </SmallLabel>
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    {/* ROW 2: IDEAS [GAP] INTO */}
-                    <div
-                        className="flex items-center justify-center w-full relative mt-2 md:mt-4"
-                        style={{ transform: `translateX(${layout.row2.x}px)` }}
-                    >
-                        <motion.div style={{ x: scrollExitLeft, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: -800, opacity: 0 }} animate={controls.textRow2Left} className="relative flex items-center">
-                                <h1 className={`${textClass} text-white`}>IDEAS</h1>
-                            </motion.div>
-                        </motion.div>
-
-                        <div className={spacerSizeClass} />
-
-                        <motion.div style={{ x: scrollExitRight, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: 800, opacity: 0 }} animate={controls.textRow2Right} className="relative flex items-center">
-                                <h1 className={`${textClass} text-white`}>INTO</h1>
-
-                                <motion.button
-                                    initial={{ scale: 0, opacity: 0 }}
-                                    animate={controls.button}
-                                    style={{ opacity: scrollOpacity }}
-                                    className="pointer-events-auto absolute left-[110%] top-1/2 -translate-y-1/2 bg-black text-white pl-6 pr-8 py-4 rounded-full flex items-center gap-3 group hover:bg-[#e6ff57] hover:text-black transition-colors duration-300 whitespace-nowrap hidden lg:flex shadow-xl"
-                                >
-                                    <span className="font-bold text-lg">Work with us</span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
-                                        <path d="M7 17L17 7M17 7H7M17 7V17" />
-                                    </svg>
-                                </motion.button>
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    {/* ROW 3: EXPERI [GAP] ENCES */}
-                    <div
-                        className="flex items-center justify-center w-full relative mt-2 md:mt-4"
-                        style={{ transform: `translateX(${layout.row3.x}px)` }}
-                    >
-                        <motion.div style={{ x: scrollExitLeft, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: -800, opacity: 0 }} animate={controls.textRow3Left} className="relative flex items-center">
-                                <h1 className={`${textClass} text-[#e6ff57]`}>EXPERI</h1>
-                                <SmallLabel className="right-[102%] top-[50%] -translate-y-1/2 text-right w-max hidden md:block" delay={3.4}>
-                                    SYSTEM<br />INTEGRATION<br />& CLOUD
-                                </SmallLabel>
-                            </motion.div>
-                        </motion.div>
-
-                        <div className={spacerSizeClass} />
-
-                        <motion.div style={{ x: scrollExitRight, opacity: scrollOpacity, scale: scrollScale }}>
-                            <motion.div initial={{ x: 800, opacity: 0 }} animate={controls.textRow3Right} className="relative flex items-center">
-                                <h1 className={`${textClass} text-[#e6ff57]`}>ENCES</h1>
-                                <SmallLabel className="left-1 top-[100%] mt-2 text-left w-max hidden md:block" delay={3.6}>
-                                    MAINTENANCE<br />& SECURITY
-                                </SmallLabel>
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
+                    <SmallLabel className="hidden lg:block absolute left-[8%] top-1/2 -translate-y-1/2 text-right">WEB & APP<br />DEVELOPMENT</SmallLabel>
                 </div>
-            </section>
+
+                <div className="relative flex items-center justify-center w-full px-4 text-center gap-2 md:gap-4 overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center">
+                        <motion.span {...textFade} className={fontClass}>IDEAS</motion.span>
+                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon2")}>
+                            <ClusterShape />
+                        </motion.div>
+                        <motion.span {...textFade} className={fontClass}>INTO</motion.span>
+                        <motion.button
+                            ref={buttonRef}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 3.4, duration: 0.8 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleOpenContact}
+                            className={`h-[50px] md:h-[70px] lg:h-[80px] bg-black text-white px-6 md:px-10 rounded-full flex items-center gap-2 md:gap-4 ml-0 mt-4 md:mt-0 md:ml-8 self-center group transition-all duration-300 ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
+                        >
+                            <span className="font-sans font-medium text-sm md:text-xl whitespace-nowrap uppercase tracking-tighter">Work with us</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
+                        </motion.button>
+                    </motion.div>
+                    <SmallLabel className="hidden lg:block absolute right-[12%] top-0 text-left">CUSTOM AI SOLUTIONS<br />& INTEGRATION</SmallLabel>
+                </div>
+
+                <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center">
+                        <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>EXPERI</motion.span>
+                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon3")}>
+                            <ArrowIconShape />
+                        </motion.div>
+                        <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>ENCES</motion.span>
+                    </motion.div>
+                    <SmallLabel className="hidden lg:block absolute right-[18%] bottom-0 text-left">MAINTENANCE<br />& SECURITY</SmallLabel>
+                    <SmallLabel className="hidden lg:block absolute left-[18%] bottom-4 text-right">SYSTEM<br />INTEGRATION<br />& CLOUD</SmallLabel>
+                </div>
+            </motion.div>
+            <MorphingModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} initialPos={buttonPos} />
         </div>
     );
 }
