@@ -1,60 +1,248 @@
-const industries = [
-    {
-        name: 'Healthcare',
-        description: 'Digital solutions for patient care and hospital management.',
-        image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-    },
-    {
-        name: 'Finance',
-        description: 'Secure platforms for banking, trading, and financial services.',
-        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-    },
-    {
-        name: 'E-Commerce',
-        description: 'Scalable online stores with seamless payment indicators.',
-        image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-    },
-    {
-        name: 'Education',
-        description: 'Learning management systems and educational tools.',
-        image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-    },
-];
+"use client";
 
-const Industries = () => {
+import React, { useState } from 'react';
+import { ArrowRight, ArrowLeft, Linkedin, Twitter, Dribbble } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Team from './Team';
+
+const ArrowOctagonIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.85em] h-[0.85em] mx-[0.2em] lg:mx-[0.1em] align-baseline -mb-[0.05em]">
+        <path fillRule="evenodd" clipRule="evenodd" d="M7.5 2L2 7.5V16.5L7.5 22H16.5L22 16.5V7.5L16.5 2H7.5Z" fill="black" />
+        <path d="M7 17L17 7M17 7H10M17 7V14" stroke="white" strokeWidth="2.5" strokeLinecap="square" />
+    </svg>
+);
+
+const HexClusterIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.85em] h-[0.85em] mr-[0.2em] align-baseline -mb-[0.05em]">
+        <path d="M6 3L2 5.5V10.5L6 13L10 10.5V5.5L6 3Z" fill="black" />
+        <path d="M16 3L12 5.5V10.5L16 13L20 10.5V5.5L16 3Z" fill="black" />
+        <path d="M6 11L2 13.5V18.5L6 21L10 18.5V13.5L6 11Z" fill="black" />
+        <path d="M16 11L12 13.5V18.5L16 21L20 18.5V13.5L16 11Z" fill="black" />
+    </svg>
+);
+
+const GrainOverlay = () => (
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.035] mix-blend-multiply">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg>
+    </div>
+);
+
+const WordReveal = ({ text, delay = 0 }) => {
+    const words = text.split(" ");
     return (
-        <div className="bg-white py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center">
-                    <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                        Industries We Serve
-                    </h2>
-                    <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
-                        Empowering diverse sectors with tailored technology.
-                    </p>
-                </div>
-                <div className="mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-4 lg:max-w-none">
-                    {industries.map((industry) => (
-                        <div key={industry.name} className="flex flex-col rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2">
-                            <div className="flex-shrink-0">
-                                <img className="h-48 w-full object-cover" src={industry.image} alt={industry.name} />
-                            </div>
-                            <div className="flex-1 bg-white p-6 flex flex-col justify-between">
-                                <div className="flex-1">
-                                    <p className="text-xl font-semibold text-gray-900">
-                                        {industry.name}
-                                    </p>
-                                    <p className="mt-3 text-base text-gray-500">
-                                        {industry.description}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
+        <span className="inline-block overflow-hidden">
+            {words.map((word, i) => (
+                <motion.span
+                    key={i}
+                    className="inline-block mr-[0.3em] font-medium"
+                    initial={{ y: "100%", opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                        duration: 0.8,
+                        delay: delay + i * 0.05,
+                        ease: [0.215, 0.61, 0.355, 1],
+                    }}
+                >
+                    {word}
+                </motion.span>
+            ))}
+        </span>
     );
 };
 
-export default Industries;
+const ProjectShowcase = () => {
+    const projects = [
+        // Column 1
+        {
+            id: 1,
+            title: "WeChange",
+            src: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=800&q=80",
+            description: "Fintech Crypto On/Off-Ramp",
+            aspect: "aspect-[16/10]"
+        },
+        {
+            id: 3,
+            title: "GrowHub",
+            src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+            description: "AI Platform B2B Matching Engine",
+            aspect: "aspect-[16/10]"
+        },
+        {
+            id: 6,
+            title: "Evominter",
+            src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+            description: "Financial Solutions",
+            aspect: "aspect-[16/10]"
+        },
+        {
+            id: 7,
+            title: "Zippy Digital",
+            src: "https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?auto=format&fit=crop&w=800&q=80",
+            description: "Digital Innovation Hub",
+            aspect: "aspect-[16/10]"
+        },
+        // Column 2
+        {
+            id: 2,
+            title: "Eneftro",
+            src: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?auto=format&fit=crop&w=800&q=80",
+            description: "NFT Marketplace",
+            // Making Eneftro slightly taller or just distinct as per screenshot
+            aspect: "aspect-[3/4]"
+        },
+        {
+            id: 4,
+            title: "Otthon",
+            src: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+            description: "Real Estate Platform",
+            aspect: "aspect-[16/10]"
+        },
+        {
+            id: 5,
+            title: "Budai Probaterem",
+            src: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80",
+            description: "Music Studio Booking",
+            aspect: "aspect-[16/10]"
+        }
+    ];
+
+    const shrinkVariants = {
+        initial: { opacity: 0, scale: 1.15, filter: "blur(20px)", y: 40 },
+        animate: {
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            y: 0,
+            transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] }
+        },
+        exit: { opacity: 0, scale: 0.9, filter: "blur(10px)", transition: { duration: 0.8, ease: "circIn" } }
+    };
+
+    const trackingVariants = {
+        hidden: { letterSpacing: "0.25em" },
+        visible: {
+            letterSpacing: "-0.05em",
+            transition: { duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }
+        }
+    };
+
+    // Split projects into two columns
+    const column1 = [projects[0], projects[1], projects[2], projects[3]];
+    const column2 = [projects[4], projects[5], projects[6]];
+
+    return (
+        <section className="w-full min-h-full bg-[#E5E5E5] flex flex-col px-6 sm:px-10 lg:px-14 pt-4 pb-10 lg:pb-20 overflow-hidden relative font-sans cursor-default">
+            <GrainOverlay />
+
+            <div className="z-20 pt-0 mb-12">
+                <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                    <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-gray-400 mb-2">
+                        Projects
+                    </span>
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-black tracking-tight leading-none">
+                        CHECKOUT OUR SERVICES
+                    </h3>
+                </motion.div>
+            </div>
+
+            {/* --- MAIN TYPOGRAPHY SECTION --- */}
+            <div className="w-full z-10 relative mb-10 lg:mb-20">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between font-bebas font-black uppercase leading-[0.8] tracking-[-0.03em] select-none">
+
+                    {/* Left Side: Big Text */}
+                    <div className="flex flex-col gap-1 sm:gap-2 lg:gap-4">
+                        {/* Group 1: WE HAVE COMPLETED MORE THAN 100 */}
+                        <div className="flex flex-col gap-1 sm:gap-2 lg:gap-4">
+                            {/* Line 1: WE HAVE COMPLETED (White) */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8 }}
+                                className="text-white text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] whitespace-normal md:whitespace-nowrap leading-[0.8]"
+                            >
+                                WE HAVE COMPLETED
+                            </motion.div>
+
+                            {/* Line 2: MORE THAN [Icon] 100 (White text, Black 100) */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.1 }}
+                                className="flex flex-wrap items-center text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] whitespace-normal md:whitespace-nowrap leading-[0.8]"
+                            >
+                                <span className="text-white mr-[0.2em]">MORE THAN</span>
+                                <div className="inline-flex items-center text-black">
+                                    <ArrowOctagonIcon />
+                                    <span className="ml-[0.1em]">100</span>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Group 2: EXCEPTIONAL PROJECTS */}
+                        <div className="flex flex-col gap-1 sm:gap-2 lg:gap-4">
+                            {/* Line 3: EXCEPTIONAL (Black) */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                className="text-black text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
+                            >
+                                EXCEPTIONAL
+                            </motion.div>
+
+                            {/* Line 4: [Icon] PROJECTS. (Black) */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.3 }}
+                                className="flex flex-wrap items-center text-black text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
+                            >
+                                <HexClusterIcon />
+                                <span>PROJECTS.</span>
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    {/* Right Side: Description Text (Aligned to bottom right) */}
+                    <div className="mt-8 lg:mt-0 lg:mb-4 lg:ml-10 max-w-[280px] sm:max-w-xs md:max-w-lg text-left self-start lg:self-end">
+                        <p className="text-xl sm:text-2xl md:text-3xl font-bebas text-black leading-[0.85] tracking-wide uppercase">
+                            <WordReveal
+                                delay={0.6}
+                                text="We architect stunning digital platforms that do more than just catch the eye. We build intuitive, high-performance websites and apps that captivate users..."
+                            />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </section>
+    );
+};
+
+
+
+export default function Industries() {
+    return (
+        <div id="our-work">
+            <ProjectShowcase />
+            <Team />
+        </div>
+    );
+}

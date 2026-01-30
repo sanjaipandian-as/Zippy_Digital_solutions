@@ -4,42 +4,82 @@ import React, { useState, useEffect } from 'react';
 
 const NavBar = () => {
     const [isVisible, setIsVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-
-            // If at the top or scrolling up, show navbar
-            if (currentScrollY < 10 || currentScrollY < lastScrollY) {
+            const viewportHeight = window.innerHeight;
+            if (currentScrollY < viewportHeight - 100) {
                 setIsVisible(true);
-            } else if (currentScrollY > lastScrollY) {
-                // Scrolling down, hide navbar
+            } else {
                 setIsVisible(false);
             }
-
-            setLastScrollY(currentScrollY);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]);
+    }, []);
+
+    const navLinks = [
+        { name: "SERVICES", href: "#services" },
+        { name: "OUR WORK", href: "#our-work" },
+        { name: "CONTACT", href: "#contact" },
+    ];
 
     return (
-        <nav
-            className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-8 pointer-events-none transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-                }`}
-        >
-            <div className="text-3xl font-black tracking-tighter flex items-center pointer-events-auto">
-                <span className="text-[#333]">VANDS</span>
-                <span className="text-[#333] border-2 border-[#333] px-1 ml-1 rounded-sm">LAB</span>
+        <>
+            <nav
+                className={`fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 md:px-12 py-8 md:py-10 transition-all duration-500 ease-in-out ${isVisible || isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+                    }`}
+            >
+                <div className="flex items-center gap-3 pointer-events-auto">
+                    <img src="/zippybg.png" alt="Zippy Logo" className="h-10 md:h-16 w-auto object-contain" />
+                    <span className="text-3xl md:text-5xl font-bebas tracking-wide text-black pt-1">ZIPPYY</span>
+                </div>
+
+                {/* Desktop Links */}
+                <div className="hidden md:flex gap-8 text-2xl font-bebas text-black tracking-wide pointer-events-auto">
+                    {navLinks.map((link) => (
+                        <a key={link.name} href={link.href} className="hover:opacity-60 transition-opacity">{link.name}</a>
+                    ))}
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="md:hidden flex flex-col gap-1.5 p-2 pointer-events-auto z-[110]"
+                >
+                    <div className={`w-8 h-1 bg-black transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />
+                    <div className={`w-8 h-1 bg-black transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+                    <div className={`w-8 h-1 bg-black transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2.5' : ''}`} />
+                </button>
+            </nav>
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={`fixed inset-0 bg-black z-[90] transition-transform duration-700 ease-[cubic-bezier(0.85,0,0.15,1)] ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'
+                    } flex flex-col items-center justify-center gap-12`}
+            >
+                {navLinks.map((link, i) => (
+                    <a
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`text-6xl font-bebas text-[#ccff00] tracking-widest hover:text-white transition-colors duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+                            }`}
+                        style={{ transitionDelay: `${i * 100}ms` }}
+                    >
+                        {link.name}
+                    </a>
+                ))}
+
+                <div className="absolute bottom-12 text-gray-500 font-bebas tracking-[0.3em] text-sm">
+                    ZIPPYY DIGITAL SOLUTIONS © 2026
+                </div>
             </div>
-            <div className="hidden md:flex gap-12 text-[13px] font-bold text-[#333] tracking-wider pointer-events-auto">
-                <a href="#" className="hover:text-black">SERVICES</a>
-                <a href="#" className="hover:text-black">OUR WORK</a>
-                <a href="#" className="hover:text-black">CONTACT</a>
-            </div>
-        </nav>
+        </>
     );
 };
 

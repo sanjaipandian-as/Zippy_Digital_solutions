@@ -1,8 +1,9 @@
 import Hero from '@/components/landing-page/Hero';
 import NavBar from '@/components/landing-page/NavBar';
-import WhyChooseUs from '@/components/landing-page/WhyChooseUs';
+import Ourservices from '@/components/landing-page/Ourservices';
 import Industries from '@/components/landing-page/Industries';
-import About from '@/components/landing-page/About';
+import WhyChooseUs from '@/components/landing-page/Whywechooseus';
+import Team from '@/components/landing-page/Team';
 import Footer from '@/components/landing-page/Footer';
 
 export default function Home() {
@@ -10,9 +11,11 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <NavBar />
       <Hero />
-      <WhyChooseUs />
+      <Ourservices />
       <Industries />
-      <About />
+      <WhyChooseUs />
+
+
       <Footer />
     </div>
   );
