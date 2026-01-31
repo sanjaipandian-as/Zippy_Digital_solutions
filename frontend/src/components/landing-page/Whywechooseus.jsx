@@ -110,18 +110,20 @@ const Noise = () => (
     <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 );
 
-const FeatureCard = ({ item, index, totalCards, scrollYProgress }) => {
+const FeatureCard = ({ item, index, totalCards, scrollYProgress, isMobile }) => {
     const containerRef = useRef(null);
+
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x);
-    const mouseYSpring = useSpring(y);
+    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
 
     const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
     const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
     const handleMouseMove = (e) => {
+        if (isMobile) return;
         const rect = containerRef.current.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
@@ -146,22 +148,22 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress }) => {
 
 
     return (
-        <div className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0 perspective-1200">
+        <div className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0 perspective-1200 will-change-transform">
             <motion.div
                 ref={containerRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 initial="initial"
                 whileInView="hover"
-                viewport={{ once: true, margin: "-20%" }}
+                viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
                 style={{
                     scale: scrollScale,
-                    rotateX,
-                    rotateY,
+                    rotateX: isMobile ? 0 : rotateX,
+                    rotateY: isMobile ? 0 : rotateY,
                     backgroundColor: item.color,
                     color: item.textColor,
                 }}
-                className="group relative w-full max-w-6xl h-auto min-h-[60vh] md:h-[80vh] rounded-[2rem] md:rounded-[6rem] p-6 md:p-24 shadow-[0_80px_150px_-30px_rgba(0,0,0,0.2)] flex flex-col justify-between overflow-hidden border border-white/10 cursor-crosshair transition-all duration-300 transform-gpu"
+                className="group relative w-full max-w-6xl h-auto min-h-[60vh] md:h-[80vh] rounded-[2rem] md:rounded-[6rem] p-6 md:p-24 shadow-[0_80px_150px_-30px_rgba(0,0,0,0.2)] flex flex-col justify-between overflow-hidden border border-white/10 cursor-crosshair transform-gpu"
             >
                 <div className="flex justify-between items-start z-10">
                     <div className="space-y-6">
@@ -198,10 +200,10 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress }) => {
                                     height: "auto",
                                     opacity: 1,
                                     transition: {
-                                        height: { duration: 0.6, ease: "circOut" },
-                                        opacity: { duration: 0.5, delay: 0.2 },
-                                        staggerChildren: 0.08,
-                                        delayChildren: 0.3
+                                        height: { duration: 0.3, ease: "easeOut" },
+                                        opacity: { duration: 0.2, delay: 0.05 },
+                                        staggerChildren: 0.03,
+                                        delayChildren: 0.05
                                     }
                                 }
                             }}
@@ -254,6 +256,14 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress }) => {
 export default function WhyChooseUs() {
     const container = useRef(null);
     const heroRef = useRef(null);
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const { scrollYProgress } = useScroll({
         target: container,
@@ -261,21 +271,21 @@ export default function WhyChooseUs() {
     });
 
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 60,
-        damping: 25,
+        stiffness: 150,
+        damping: 35,
         restDelta: 0.001
     });
 
     const bgColor = useTransform(
         smoothProgress,
-        [0, 0.02, 1],
+        [0, 0.01, 1],
         ["#FFFFFF", "#000000", "#000000"]
     );
 
     return (
         <motion.section
             style={{ backgroundColor: bgColor }}
-            className="transition-colors duration-1000 ease-in-out selection:bg-black selection:text-white relative"
+            className="selection:bg-black selection:text-white relative"
         >
             <Noise />
 
@@ -285,30 +295,30 @@ export default function WhyChooseUs() {
                 </div>
 
                 <div className="text-center space-y-6 md:space-y-8 z-10 max-w-5xl">
-                    <h1 className="text-[25vw] md:text-[15rem] font-bold tracking-[-0.09em] leading-[0.85] md:leading-[0.7] text-center">
+                    <h1 className="text-[25vw] md:text-[15rem] font-bold tracking-[-0.09em] leading-[0.85] md:leading-[0.7] text-center will-change-transform">
                         <motion.span
-                            initial={{ opacity: 0, y: 150, rotateX: -20, filter: "blur(20px)" }}
-                            whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                            viewport={{ once: false, margin: "-100px" }}
-                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.1 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
                             className="block bg-gradient-to-b from-black to-black/60 bg-clip-text text-transparent"
                         >
                             WHY
                         </motion.span>
                         <motion.span
-                            initial={{ opacity: 0, y: 150, rotateX: -20, filter: "blur(20px)" }}
-                            whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                            viewport={{ once: false, margin: "-100px" }}
-                            transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.1 }}
+                            transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
                             className="block bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text text-transparent h-[1em]"
                         >
                             CHOOSE
                         </motion.span>
                         <motion.span
-                            initial={{ opacity: 0, y: 150, rotateX: -20, filter: "blur(20px)" }}
-                            whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                            viewport={{ once: false, margin: "-100px" }}
-                            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.1 }}
+                            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
                             className="block bg-gradient-to-b from-black to-black/60 bg-clip-text text-transparent"
                         >
                             US?
@@ -336,6 +346,7 @@ export default function WhyChooseUs() {
                         index={index}
                         totalCards={features.length}
                         scrollYProgress={smoothProgress}
+                        isMobile={isMobile}
                     />
                 ))}
             </section>

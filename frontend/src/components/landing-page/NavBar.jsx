@@ -9,8 +9,7 @@ const NavBar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-            const viewportHeight = window.innerHeight;
-            if (currentScrollY < viewportHeight - 100) {
+            if (currentScrollY < 50) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
@@ -36,7 +35,10 @@ const NavBar = () => {
             >
                 <div className="flex items-center gap-3 pointer-events-auto">
                     <img src="/zippybg.png" alt="Zippy Logo" className="h-10 md:h-16 w-auto object-contain" />
-                    <span className="text-3xl md:text-5xl font-bebas tracking-wide text-black pt-1">ZIPPYY</span>
+                    <div className="flex flex-col">
+                        <span className="text-3xl md:text-5xl font-bebas tracking-wide text-black leading-none pt-1">ZIPPYY</span>
+                        <span className="text-[8px] md:text-[10px] font-bold tracking-[0.3em] text-gray-500 uppercase mt-0.5">Digital solutions</span>
+                    </div>
                 </div>
 
                 {/* Desktop Links */}
