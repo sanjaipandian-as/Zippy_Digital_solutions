@@ -9,19 +9,25 @@ export default function Footer() {
   // without needing an external CSS file, making this a self-contained artifact.
 
   return (
-    <div id="contact" className="relative w-full h-[100dvh] bg-black overflow-hidden flex flex-col justify-center items-center font-sans select-none">
+    <div id="contact" className="relative w-full h-[100vh] bg-black overflow-hidden flex flex-col justify-center items-center font-sans select-none">
 
       {/* Custom Styles for Keyframe Animations */}
       <style>
         {`
           @keyframes slide-right-left {
-            0% { transform: translateX(10%); }
-            100% { transform: translateX(-30%); }
+            0% { transform: translate3d(10%, 0, 0); }
+            100% { transform: translate3d(-30%, 0, 0); }
           }
           
           @keyframes slide-left-right {
-            0% { transform: translateX(-30%); }
-            100% { transform: translateX(10%); }
+            0% { transform: translate3d(-30%, 0, 0); }
+            100% { transform: translate3d(10%, 0, 0); }
+          }
+
+          .animate-row-1, .animate-row-2, .animate-row-3 {
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
           }
 
           .animate-row-1 {

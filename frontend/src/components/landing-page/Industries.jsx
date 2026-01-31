@@ -13,11 +13,10 @@ const ArrowOctagonIcon = () => (
 );
 
 const HexClusterIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.85em] h-[0.85em] mr-[0.2em] align-baseline -mb-[0.05em]">
-        <path d="M6 3L2 5.5V10.5L6 13L10 10.5V5.5L6 3Z" fill="black" />
-        <path d="M16 3L12 5.5V10.5L16 13L20 10.5V5.5L16 3Z" fill="black" />
-        <path d="M6 11L2 13.5V18.5L6 21L10 18.5V13.5L6 11Z" fill="black" />
-        <path d="M16 11L12 13.5V18.5L16 21L20 18.5V13.5L16 11Z" fill="black" />
+    <svg viewBox="35 35 110 110" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.8em] h-[0.8em] mr-[0.25em] align-baseline -mb-[0.05em] text-black">
+        <rect x="40" y="40" width="100" height="25" rx="8" fill="currentColor" />
+        <rect x="55" y="75" width="70" height="25" rx="8" fill="currentColor" />
+        <rect x="70" y="110" width="40" height="25" rx="8" fill="currentColor" />
     </svg>
 );
 
@@ -186,7 +185,7 @@ const ProjectShowcase = () => {
                                 <span className="text-white mr-[0.2em]">MORE THAN</span>
                                 <div className="inline-flex items-center text-black">
                                     <ArrowOctagonIcon />
-                                    <span className="ml-[0.1em]">100</span>
+                                    <span className="ml-[0.1em]">50+</span>
                                 </div>
                             </motion.div>
                         </div>
@@ -201,7 +200,7 @@ const ProjectShowcase = () => {
                                 transition={{ duration: 0.8, delay: 0.2 }}
                                 className="text-black text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
                             >
-                                EXCEPTIONAL
+                                REAL WORLD
                             </motion.div>
 
                             {/* Line 4: [Icon] PROJECTS. (Black) */}
@@ -223,7 +222,7 @@ const ProjectShowcase = () => {
                         <p className="text-xl sm:text-2xl md:text-3xl font-bebas text-black leading-[0.85] tracking-wide uppercase">
                             <WordReveal
                                 delay={0.6}
-                                text="We architect stunning digital platforms that do more than just catch the eye. We build intuitive, high-performance websites and apps that captivate users..."
+                                text="We engineer sophisticated digital platforms that go far beyond visuals. Our team builds intuitive, high-performance websites and applications designed to engage and retain users."
                             />
                         </p>
                     </div>
