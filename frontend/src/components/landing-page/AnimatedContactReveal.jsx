@@ -55,7 +55,7 @@ export default function AnimatedContactReveal() {
     };
 
     return (
-        <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+        <div className={`${status === "modal" ? "fixed" : "absolute"} inset-0 flex items-center justify-center z-[9999] pointer-events-none`}>
             <motion.div
                 layout
                 transition={{
