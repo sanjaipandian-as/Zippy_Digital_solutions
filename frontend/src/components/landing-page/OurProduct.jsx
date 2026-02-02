@@ -126,7 +126,10 @@ export default function App() {
     });
 
     const scrollIndex = useTransform(scrollYProgress, [0, 1], [-0.5, IMAGES.length - 0.5]);
-    const smoothIndex = useSpring(scrollIndex, { stiffness: 100, damping: 20 });
+    const smoothIndex = useSpring(scrollIndex, {
+        stiffness: isMobile ? 250 : 100,
+        damping: isMobile ? 30 : 20
+    });
 
     useMotionValueEvent(smoothIndex, "change", (latest) => {
         const newIndex = Math.max(0, Math.min(Math.round(latest), IMAGES.length - 1));
@@ -168,7 +171,7 @@ export default function App() {
     const currentData = IMAGES[index] || IMAGES[0];
 
     return (
-        <div id="products" ref={containerRef} className="relative h-[1600vh]">
+        <div id="products" ref={containerRef} className="relative h-[700vh] md:h-[1600vh]">
             <div className="sticky top-0 flex flex-col items-center justify-center md:justify-start h-screen bg-white text-black font-sans overflow-hidden select-none pt-4 pb-2">
                 <div className="relative flex items-center justify-center w-full h-[250px] md:h-[300px]">
                     {IMAGES.map((img, i) => {
@@ -241,19 +244,19 @@ export default function App() {
                     })}
                 </div>
 
-                {/* Laptop Design */}
-                <div className="relative w-[95%] md:w-[600px] lg:w-[800px] mt-4 md:mt-12 flex flex-col items-center">
-                    {/* Screen Lid */}
-                    <div className="relative w-[90%] md:w-[80%] h-[200px] sm:h-[280px] lg:h-[380px] bg-[#1a1a1a] rounded-t-[1rem] md:rounded-t-[1.5rem] p-[3px] border-2 border-gray-800 shadow-2xl">
+                {/* Laptop/Tablet Design */}
+                <div className="relative w-[98%] md:w-[600px] lg:w-[800px] mt-8 md:mt-12 flex flex-col items-center">
+                    {/* Device Body (Tablet on Mobile / Screen on Desktop) */}
+                    <div className="relative w-[95%] md:w-[80%] h-[400px] sm:h-[280px] lg:h-[380px] bg-[#1a1a1a] rounded-[2rem] md:rounded-b-none md:rounded-t-[1.5rem] p-[3px] border-2 border-gray-800 shadow-2xl">
                         {/* Camera Notch */}
                         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 md:w-20 h-2 md:h-3 bg-black rounded-b-lg z-20"></div>
 
                         {/* Screen Display */}
-                        <div className="w-full h-full bg-white rounded-t-[0.8rem] md:rounded-t-[1.2rem] overflow-hidden relative group">
+                        <div className="w-full h-full bg-white rounded-[1.8rem] md:rounded-b-none md:rounded-t-[1.2rem] overflow-hidden relative group">
                             {/* Scrollable Content Container */}
                             <div
                                 ref={laptopContentRef}
-                                className={`absolute inset-0 overflow-hidden p-4 md:p-6 transition-all duration-700 ${showInstruction ? 'blur-sm scale-[0.98] opacity-50' : 'blur-0 scale-100 opacity-100'}`}
+                                className={`absolute inset-0 overflow-hidden p-5 md:p-6 transition-all duration-700 ${showInstruction ? 'blur-sm scale-[0.98] opacity-50' : 'blur-0 scale-100 opacity-100'}`}
                             >
                                 <motion.div
                                     key={currentData.id}
@@ -263,9 +266,9 @@ export default function App() {
                                     className="flex flex-col gap-3 md:gap-4 text-center items-center"
                                 >
                                     {/* Title & Description */}
-                                    <div className="space-y-1 md:space-y-2">
-                                        <h2 className="text-lg md:text-2xl font-bold text-gray-800">{currentData.title}</h2>
-                                        <p className="text-xs md:text-sm text-gray-600 max-w-[95%] mx-auto leading-relaxed">
+                                    <div className="space-y-2">
+                                        <h2 className="text-2xl md:text-2xl font-bold text-gray-800">{currentData.title}</h2>
+                                        <p className="text-sm md:text-sm text-gray-600 max-w-[95%] mx-auto leading-relaxed">
                                             {currentData.description}
                                         </p>
                                     </div>
@@ -281,7 +284,7 @@ export default function App() {
                                     </motion.a>
 
                                     {/* Gallery Grid */}
-                                    <div className="grid grid-cols-2 gap-2 md:gap-3 w-full mt-2 md:mt-4">
+                                    <div className="grid grid-cols-1 gap-2 md:gap-3 w-full mt-2 md:mt-4">
                                         {currentData.extraImages.map((src, i) => (
                                             <div key={i} className="relative aspect-video rounded-md md:rounded-lg overflow-hidden shadow-md group/img">
                                                 <img
@@ -322,8 +325,8 @@ export default function App() {
                         </div>
                     </div>
 
-                    {/* Base */}
-                    <div className="relative w-full h-[10px] sm:h-[20px] bg-[#d1d5db] rounded-b-[1rem] shadow-[0_10px_20px_rgba(0,0,0,0.2)] flex items-start justify-center">
+                    {/* Base (Hidden on Mobile/Tablet view) */}
+                    <div className="hidden md:flex relative w-full h-[10px] sm:h-[20px] bg-[#d1d5db] rounded-b-[1rem] shadow-[0_10px_20px_rgba(0,0,0,0.2)] items-start justify-center">
                         <div className="w-[15%] h-[4px] bg-[#9ca3af] rounded-b-md"></div>
                     </div>
                 </div>
