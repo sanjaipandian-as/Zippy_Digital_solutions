@@ -58,8 +58,8 @@ const NavBar = () => {
                 <div className="flex items-center gap-3 pointer-events-auto">
                     <img src="/zippybg.png" alt="Zippy Logo" className="h-10 md:h-16 w-auto object-contain" />
                     <div className="flex flex-col">
-                        <span className="text-3xl md:text-5xl font-bebas tracking-wide text-black leading-none pt-1">ZIPPYY</span>
-                        <span className="text-[8px] md:text-[10px] font-bold tracking-[0.3em] text-gray-500 uppercase mt-0.5">Digital solutions</span>
+                        <span className={`text-3xl md:text-5xl font-bebas tracking-wide leading-none pt-1 transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-black'}`}>ZIPPYY</span>
+                        <span className={`text-[8px] md:text-[10px] font-bold tracking-[0.3em] uppercase mt-0.5 transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-gray-500'}`}>Digital solutions</span>
                     </div>
                 </div>
 
@@ -75,9 +75,9 @@ const NavBar = () => {
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className="md:hidden flex flex-col gap-1.5 p-2 pointer-events-auto z-[110]"
                 >
-                    <div className={`w-8 h-1 bg-black transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`} />
-                    <div className={`w-8 h-1 bg-black transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
-                    <div className={`w-8 h-1 bg-black transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2.5' : ''}`} />
+                    <div className={`w-8 h-1 transition-transform duration-300 ${isMenuOpen ? 'bg-white rotate-45 translate-y-2.5' : 'bg-black'}`} />
+                    <div className={`w-8 h-1 transition-opacity duration-300 ${isMenuOpen ? 'bg-white opacity-0' : 'bg-black opacity-100'}`} />
+                    <div className={`w-8 h-1 transition-transform duration-300 ${isMenuOpen ? 'bg-white -rotate-45 -translate-y-2.5' : 'bg-black'}`} />
                 </button>
             </nav>
 
