@@ -127,8 +127,8 @@ export default function App() {
 
     const scrollIndex = useTransform(scrollYProgress, [0, 1], [-0.5, IMAGES.length - 0.5]);
     const smoothIndex = useSpring(scrollIndex, {
-        stiffness: isMobile ? 250 : 100,
-        damping: isMobile ? 30 : 20
+        stiffness: isMobile ? 150 : 100,
+        damping: isMobile ? 40 : 20
     });
 
     useMotionValueEvent(smoothIndex, "change", (latest) => {
@@ -171,7 +171,7 @@ export default function App() {
     const currentData = IMAGES[index] || IMAGES[0];
 
     return (
-        <div id="products" ref={containerRef} className="relative h-[700vh] md:h-[1600vh]">
+        <div id="products" ref={containerRef} className="relative h-[1200vh] md:h-[1600vh]">
             <div className="sticky top-0 flex flex-col items-center justify-center md:justify-start h-screen bg-white text-black font-sans overflow-hidden select-none pt-4 pb-2">
                 <div className="relative flex items-center justify-center w-full h-[250px] md:h-[300px]">
                     {IMAGES.map((img, i) => {
