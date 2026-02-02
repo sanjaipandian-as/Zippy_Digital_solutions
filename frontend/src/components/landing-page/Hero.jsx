@@ -209,7 +209,20 @@ export default function App() {
         transition: { duration: 0.8, delay: 2.2, ease: "easeOut" } // Delayed to match new orbit time
     };
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const CenteredOrbit = () => {
+        // Dynamic values based on screen size
+        const radius = isMobile ? -70 : -120; // Smaller orbit radius on mobile
+        const stackSpacing = isMobile ? 45 : 60; // Tighter stacking on mobile
+
         return (
             <motion.div
                 className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
@@ -228,16 +241,16 @@ export default function App() {
                         animate={{ opacity: 1, rotate: [0, 0, 0, 360] }}
                         transition={{
                             rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
-                            opacity: { duration: 0.2 }
+                            opacity: { duration: 0.2 } // Fade in quickly, don't take 2s
                         }}
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, -120, -120, 60] }} // Ends at bottom (60)
+                            animate={{ y: [0, radius, radius, stackSpacing] }} // Ends at bottom (+spacing)
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
-                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                className="w-[16vw] h-[16vw] md:w-32 md:h-32 -translate-x-1/2 -translate-y-1/2"
                                 animate={{ rotate: -360 }}
                                 transition={{ duration: 2, ease: "linear" }}
                             >
@@ -260,11 +273,11 @@ export default function App() {
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, -120, -120, -60] }} // Ends at top (-60)
+                            animate={{ y: [0, radius, radius, -stackSpacing] }} // Ends at top (-spacing)
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
-                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                className="w-[16vw] h-[16vw] md:w-32 md:h-32 -translate-x-1/2 -translate-y-1/2"
                                 animate={{ rotate: -360 }}
                                 transition={{ duration: 2, ease: "linear" }}
                             >
@@ -287,11 +300,11 @@ export default function App() {
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, -120, -120, 0] }} // Ends in middle (0)
+                            animate={{ y: [0, radius, radius, 0] }} // Ends in middle (0)
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
-                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                className="w-[16vw] h-[16vw] md:w-32 md:h-32 -translate-x-1/2 -translate-y-1/2"
                                 animate={{ rotate: -360 }}
                                 transition={{ duration: 2, ease: "linear" }}
                             >
