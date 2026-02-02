@@ -174,7 +174,22 @@ const ServiceAccordion = () => {
     };
 
     return (
-        <div id="services" className="w-full min-h-screen bg-white p-4 sm:p-6 flex items-center justify-center overflow-x-hidden">
+        <div id="services" className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center overflow-x-hidden pt-20">
+            <div className="w-full max-w-[1600px] mb-8 lg:mb-10 px-2 self-center">
+                <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                    <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-gray-400 mb-2">
+                        WHAT WE DO
+                    </span>
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-black tracking-tight leading-none">
+                        OUR SERVICES
+                    </h3>
+                </motion.div>
+            </div>
             <div
                 className="w-full max-w-[1600px] flex flex-col gap-4 lg:gap-3 lg:grid lg:h-[85vh] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 style={getGridStyles()}

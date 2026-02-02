@@ -9,7 +9,7 @@ export default function Footer() {
   // without needing an external CSS file, making this a self-contained artifact.
 
   return (
-    <div id="contact" className="relative w-full h-[100vh] bg-black overflow-hidden flex flex-col justify-center items-center font-sans select-none">
+    <div id="contact-us" className="relative w-full h-[100vh] bg-black overflow-hidden flex flex-col justify-center items-center font-sans select-none z-[10002]">
 
       {/* Custom Styles for Keyframe Animations */}
       <style>

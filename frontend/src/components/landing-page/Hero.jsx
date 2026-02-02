@@ -60,6 +60,21 @@ const SmallLabel = ({ children, className = "" }) => (
 
 
 
+const OrbitWrapper = ({ children, delay = 0, reverse = false }) => (
+    <motion.div
+        animate={{ rotate: reverse ? -360 : 360 }}
+        transition={{
+            duration: 12,
+            ease: "linear",
+            repeat: Infinity,
+            delay: delay
+        }}
+        className="w-full h-full"
+    >
+        {children}
+    </motion.div>
+);
+
 function MorphingModal({ isOpen, onClose, initialPos }) {
     const [mounted, setMounted] = useState(false);
     const [status, setStatus] = useState("button");
@@ -132,7 +147,7 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] pointer-events-none">
+                <div className="fixed inset-0 z-[10002] pointer-events-none">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-md pointer-events-auto" onClick={handleClose} />
                     <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ccff00] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
                         <AnimatePresence mode="wait">
@@ -157,6 +172,8 @@ export default function App() {
     const scaleText = useTransform(scrollY, [0, 500], [1, 0.95]);
     const opacityText = useTransform(scrollY, [0, 300], [1, 0]);
 
+    const [showOrbit, setShowOrbit] = useState(true);
+
     const [isContactOpen, setIsContactOpen] = useState(false);
     const [buttonPos, setButtonPos] = useState(null);
     const buttonRef = useRef(null);
@@ -173,79 +190,163 @@ export default function App() {
     const fontClass = "font-bebas text-[18vw] md:text-[8rem] lg:text-[11rem] leading-[0.85] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
     const shapeWrapper = "w-[16vw] h-[16vw] md:w-[7rem] md:h-[7rem] lg:w-[9rem] lg:h-[9rem] mx-2 md:mx-4 shrink-0 self-center z-20";
 
-    const getComplexAnimation = (id) => {
-        let initialX = 0;
-        let initialY = 0;
-        let midX = 0;
-
-        if (id === "icon1") {
-            initialX = 2000;
-            midX = "-22vw";
-        }
-        if (id === "icon2") {
-            initialX = -2000;
-            midX = "0vw";
-        }
-        if (id === "icon3") {
-            initialY = 2000;
-            midX = "22vw";
+    useEffect(() => {
+        // Force scroll to top on mount/reload
+        if (typeof window !== 'undefined') {
+            window.history.scrollRestoration = 'manual';
+            window.scrollTo(0, 0);
         }
 
-        return {
-            initial: { x: initialX, y: initialY, opacity: 0, scale: 0.4, rotate: -45 },
-            animate: {
-                x: [initialX, midX, 0],
-                y: [initialY, 0, 0],
-                opacity: [0, 1, 1],
-                scale: [0.4, 1.1, 1],
-                rotate: [-45, 0, 0]
-            },
-            transition: {
-                duration: 2.8,
-                times: [0, 0.45, 1],
-                ease: [0.76, 0, 0.24, 1],
-                delay: 0.2
-            }
-        };
-    };
+        const timer = setTimeout(() => {
+            setShowOrbit(false);
+        }, 2000); // Extended to 2 seconds for full expand-collapse cycle
+        return () => clearTimeout(timer);
+    }, []);
 
     const textFade = {
-        initial: { opacity: 0, y: 40, filter: "blur(10px)" },
+        initial: { opacity: 0, y: 20, filter: "blur(10px)" },
         animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-        transition: { duration: 1, delay: 2.4, ease: [0.22, 1, 0.36, 1] }
+        transition: { duration: 0.8, delay: 2.2, ease: "easeOut" } // Delayed to match new orbit time
+    };
+
+    const CenteredOrbit = () => {
+        return (
+            <motion.div
+                className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
+            >
+                {/* Icons Layer - Stays opaque for layoutId transition */}
+                <motion.div
+                    className="relative flex items-center justify-center"
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, ease: "linear" }}
+                >
+                    {/* Icon 1 - Top Position (Start Angle 0) -> Becomes Arrow (Targeting Slot 3 - Bottom) */}
+                    <motion.div
+                        className="absolute"
+                        initial={{ opacity: 0, rotate: 0 }}
+                        animate={{ opacity: 1, rotate: [0, 0, 0, 360] }}
+                        transition={{
+                            rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
+                            opacity: { duration: 0.2 }
+                        }}
+                    >
+                        <motion.div
+                            initial={{ y: 0 }}
+                            animate={{ y: [0, -120, -120, 60] }} // Ends at bottom (60)
+                            transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
+                        >
+                            <motion.div
+                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 2, ease: "linear" }}
+                            >
+                                <motion.div className="w-full h-full" layoutId="icon3">
+                                    <ArrowIconShape />
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Icon 2 - Right Position (Start Angle 120) -> Becomes Asterisk (Targeting Slot 1 - Top) */}
+                    <motion.div
+                        className="absolute"
+                        initial={{ rotate: 120, opacity: 0 }}
+                        animate={{ rotate: [120, 120, 120, 360], opacity: 1 }} // Aligns to vertical
+                        transition={{
+                            rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
+                            opacity: { duration: 0.2 }
+                        }}
+                    >
+                        <motion.div
+                            initial={{ y: 0 }}
+                            animate={{ y: [0, -120, -120, -60] }} // Ends at top (-60)
+                            transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
+                        >
+                            <motion.div
+                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 2, ease: "linear" }}
+                            >
+                                <motion.div className="w-full h-full" layoutId="icon1">
+                                    <AsteriskShape />
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Icon 3 - Left Position (Start Angle 240) -> Becomes Cluster (Targeting Slot 2 - Middle) */}
+                    <motion.div
+                        className="absolute"
+                        initial={{ rotate: 240, opacity: 0 }}
+                        animate={{ rotate: [240, 240, 240, 360], opacity: 1 }} // Aligns to vertical
+                        transition={{
+                            rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
+                            opacity: { duration: 0.2 }
+                        }}
+                    >
+                        <motion.div
+                            initial={{ y: 0 }}
+                            animate={{ y: [0, -120, -120, 0] }} // Ends in middle (0)
+                            transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
+                        >
+                            <motion.div
+                                className="w-32 h-32 -translate-x-1/2 -translate-y-1/2"
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 2, ease: "linear" }}
+                            >
+                                <motion.div className="w-full h-full" layoutId="icon2">
+                                    <ClusterShape />
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
+            </motion.div>
+        );
     };
 
     return (
         <div className="relative w-full min-h-screen bg-[#e0e0e0] overflow-x-hidden selection:bg-[#ccff00] selection:text-black">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
+            {/* CenteredOrbit moved inside layout below */}
+
             <motion.div
                 style={{ y: yText, scale: scaleText, opacity: opacityText }}
                 className="w-full h-screen md:min-h-screen flex flex-col items-center justify-evenly md:justify-center md:gap-4 py-20 md:py-0"
             >
+                {showOrbit && <CenteredOrbit />}
                 <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={fontClass}>TURNING</motion.span>
-                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon1")}>
-                            <AsteriskShape />
-                        </motion.div>
+                        <div className={`${shapeWrapper} relative`}>
+                            {!showOrbit && (
+                                <motion.div className="w-full h-full" layoutId="icon1" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+                                    <AsteriskShape />
+                                </motion.div>
+                            )}
+                        </div>
                         <motion.span {...textFade} className={fontClass}>YOUR IDEAS</motion.span>
                     </motion.div>
-
                 </div>
 
                 <div className="relative flex items-center justify-center w-full px-4 text-center gap-2 md:gap-4 overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={fontClass}>INTO</motion.span>
-                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon2")}>
-                            <ClusterShape />
-                        </motion.div>
+                        <div className={shapeWrapper}>
+                            {!showOrbit && (
+                                <motion.div className="w-full h-full" layoutId="icon2" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+                                    <ClusterShape />
+                                </motion.div>
+                            )}
+                        </div>
                         <motion.span {...textFade} className={fontClass}>IMPACTFUL</motion.span>
                         <motion.button
                             ref={buttonRef}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 3.4, duration: 0.8 }}
+                            transition={{ delay: 2.4, duration: 0.8 }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleOpenContact}
@@ -261,9 +362,13 @@ export default function App() {
                 <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>EXPERI</motion.span>
-                        <motion.div className={shapeWrapper} {...getComplexAnimation("icon3")}>
-                            <ArrowIconShape />
-                        </motion.div>
+                        <div className={shapeWrapper}>
+                            {!showOrbit && (
+                                <motion.div className="w-full h-full" layoutId="icon3" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+                                    <ArrowIconShape />
+                                </motion.div>
+                            )}
+                        </div>
                         <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>ENCES</motion.span>
                     </motion.div>
                     <SmallLabel className="hidden lg:block absolute right-[18%] bottom-0 text-left">ONGOING MAINTENANCE<br />& PROTECTION</SmallLabel>
