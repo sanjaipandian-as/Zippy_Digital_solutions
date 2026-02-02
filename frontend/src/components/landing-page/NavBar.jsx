@@ -68,7 +68,7 @@ const NavBar = () => {
                     {navLinks.map((link) => (
                         <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="hover:opacity-60 transition-opacity cursor-pointer">{link.name}</a>
                     ))}
-                </div>
+                </div>  
 
                 {/* Mobile Menu Toggle */}
                 <button

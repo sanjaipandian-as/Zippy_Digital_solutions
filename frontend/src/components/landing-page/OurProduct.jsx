@@ -326,8 +326,8 @@ export default function App() {
                     </div>
 
                     {/* Base (Hidden on Mobile/Tablet view) */}
-                    <div className="hidden md:flex relative w-full h-[10px] sm:h-[20px] bg-[#d1d5db] rounded-b-[1rem] shadow-[0_10px_20px_rgba(0,0,0,0.2)] items-start justify-center">
-                        <div className="w-[15%] h-[4px] bg-[#9ca3af] rounded-b-md"></div>
+                    <div className="hidden md:flex relative w-full h-[10px] sm:h-[20px] bg-black rounded-b-[1rem] shadow-[0_10px_20px_rgba(0,0,0,0.5)] items-start justify-center">
+                        <div className="w-[15%] h-[4px] bg-gray-800 rounded-b-md"></div>
                     </div>
                 </div>
             </div>
