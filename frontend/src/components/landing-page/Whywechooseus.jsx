@@ -107,7 +107,7 @@ const features = [
 ];
 
 const Noise = () => (
-    <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+    <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.035]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 );
 
 const FeatureCard = ({ item, index, totalCards, scrollYProgress, isMobile }) => {
@@ -284,6 +284,7 @@ export default function WhyChooseUs() {
 
     return (
         <motion.section
+            id="why-choose-us"
             style={{ backgroundColor: bgColor }}
             className="selection:bg-black selection:text-white relative"
         >
@@ -310,7 +311,7 @@ export default function WhyChooseUs() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, amount: 0.1 }}
                             transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
-                            className="block bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text text-transparent h-[1em]"
+                            className="block bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text text-transparent"
                         >
                             CHOOSE
                         </motion.span>

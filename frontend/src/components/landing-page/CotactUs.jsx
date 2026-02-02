@@ -32,7 +32,7 @@ export default function ContactUs({ isOpen, onClose }) {
     if (!isOpen) return null;
 
     return (
-        <div className="w-full h-full flex items-center justify-center font-sans pointer-events-auto">
+        <div className="w-full h-full flex items-center justify-center font-sans pointer-events-auto relative z-[10002]">
 
             {/* Main Modal Container */}
             <motion.div

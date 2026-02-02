@@ -81,7 +81,7 @@ export default function Team() {
     };
 
     return (
-        <section className="relative w-full min-h-screen bg-[#050505] overflow-hidden flex flex-col lg:flex-row">
+        <section id="team" className="relative w-full min-h-screen bg-[#050505] overflow-hidden flex flex-col lg:flex-row z-20">
 
             {/* Left Content - White Background with Slant */}
             <div className="relative w-full lg:w-[55%] bg-white h-full min-h-0 lg:min-h-screen p-6 md:p-16 flex flex-col justify-center z-10">

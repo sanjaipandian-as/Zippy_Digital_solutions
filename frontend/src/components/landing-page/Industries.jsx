@@ -241,7 +241,6 @@ export default function Industries() {
     return (
         <div id="our-work">
             <ProjectShowcase />
-            <Team />
         </div>
     );
 }
