@@ -170,7 +170,20 @@ export default function App() {
     const { scrollY } = useScroll();
     const yText = useTransform(scrollY, [0, 500], [0, 100]);
     const scaleText = useTransform(scrollY, [0, 500], [1, 0.95]);
-    const opacityText = useTransform(scrollY, [0, 300], [1, 0]);
+
+    // Parallax Curtain Effect with Horizontal Motion
+    const yLine1 = useTransform(scrollY, [0, 500], [0, 0]); // Zero vertical movement
+    const yLine2 = useTransform(scrollY, [0, 500], [0, 0]);
+    const yLine3 = useTransform(scrollY, [0, 500], [0, 0]);
+
+    // Horizontal Motion
+    const xLine1 = useTransform(scrollY, [0, 400], [0, 200]);   // Move Right
+    const xLine3 = useTransform(scrollY, [0, 400], [0, -200]);  // Move Left
+
+    // Opacity
+    const opacityLine1 = useTransform(scrollY, [0, 300], [1, 1]); // Solid
+    const opacityLine2 = useTransform(scrollY, [0, 200], [1, 0]); // FADE OUT
+    const opacityLine3 = useTransform(scrollY, [0, 500], [1, 1]); // Solid
 
     const [showOrbit, setShowOrbit] = useState(true);
 
@@ -194,7 +207,20 @@ export default function App() {
         // Force scroll to top on mount/reload
         if (typeof window !== 'undefined') {
             window.history.scrollRestoration = 'manual';
-            window.scrollTo(0, 0);
+
+            // Clear any hash from URL that might cause auto-scroll
+            if (window.location.hash) {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
+
+            // Use requestAnimationFrame to ensure DOM is ready
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 0);
+                // Double-check after a brief delay
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 10);
+            });
         }
 
         const timer = setTimeout(() => {
@@ -320,17 +346,17 @@ export default function App() {
     };
 
     return (
-        <div className="relative w-full min-h-screen bg-[#e0e0e0] overflow-x-hidden selection:bg-[#ccff00] selection:text-black">
+        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#ccff00] selection:text-black">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
             {/* CenteredOrbit moved inside layout below */}
 
             <motion.div
-                style={{ y: yText, scale: scaleText, opacity: opacityText }}
-                className="w-full h-screen md:min-h-screen flex flex-col items-center justify-evenly md:justify-center md:gap-4 py-20 md:py-0"
+                style={{ y: yText, scale: scaleText }}
+                className="w-full flex flex-col items-center justify-center gap-4 pt-28 pb-20 md:pt-36 md:pb-32 pointer-events-none"
             >
                 {showOrbit && <CenteredOrbit />}
-                <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
+                <motion.div style={{ opacity: opacityLine1, y: yLine1, x: xLine1 }} className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={fontClass}>TURNING</motion.span>
                         <div className={`${shapeWrapper} relative`}>
@@ -342,9 +368,9 @@ export default function App() {
                         </div>
                         <motion.span {...textFade} className={fontClass}>YOUR IDEAS</motion.span>
                     </motion.div>
-                </div>
+                </motion.div>
 
-                <div className="relative flex items-center justify-center w-full px-4 text-center gap-2 md:gap-4 overflow-visible">
+                <motion.div style={{ opacity: opacityLine2, y: yLine2 }} className="relative flex items-center justify-center w-full px-4 text-center gap-2 md:gap-4 overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={fontClass}>INTO</motion.span>
                         <div className={shapeWrapper}>
@@ -363,16 +389,16 @@ export default function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleOpenContact}
-                            className={`h-[50px] md:h-[70px] lg:h-[80px] bg-black text-white px-6 md:px-10 rounded-full flex items-center gap-2 md:gap-4 ml-0 mt-4 md:mt-0 md:ml-8 self-center group transition-all duration-300 ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
+                            className={`h-[50px] md:h-[70px] lg:h-[80px] bg-black text-white px-6 md:px-10 rounded-full flex items-center gap-2 md:gap-4 ml-0 mt-4 md:mt-0 md:ml-8 self-center group transition-all duration-300 pointer-events-auto ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
                         >
                             <span className="font-sans font-medium text-sm md:text-xl whitespace-nowrap uppercase tracking-tighter">Innovate With Us</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
                         </motion.button>
                     </motion.div>
                     <SmallLabel className="hidden lg:block absolute right-[12%] top-0 text-left">AI SOLUTIONS<br />BUILT FOR YOU</SmallLabel>
-                </div>
+                </motion.div>
 
-                <div className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
+                <motion.div style={{ opacity: opacityLine3, y: yLine3, x: xLine3 }} className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
                         <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>EXPERI</motion.span>
                         <div className={shapeWrapper}>
@@ -386,7 +412,7 @@ export default function App() {
                     </motion.div>
                     <SmallLabel className="hidden lg:block absolute right-[18%] bottom-0 text-left">ONGOING MAINTENANCE<br />& PROTECTION</SmallLabel>
                     <SmallLabel className="hidden lg:block absolute left-[18%] bottom-4 text-right">CLOUD & SYSTEM<br />INTEGRATION</SmallLabel>
-                </div>
+                </motion.div>
             </motion.div>
             <MorphingModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} initialPos={buttonPos} />
         </div>

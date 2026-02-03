@@ -72,7 +72,14 @@ const Team = () => {
     const [direction, setDirection] = useState(0);
     const scrollContainerRef = useRef(null);
 
+    const isFirstRun = useRef(true);
+
     useEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
+
         if (scrollContainerRef.current) {
             const activeItem = scrollContainerRef.current.children[activeIndex];
             if (activeItem) {
@@ -131,7 +138,7 @@ const Team = () => {
     };
 
     return (
-        <div className="h-screen bg-[#111] flex items-center justify-center font-sans relative overflow-hidden">
+        <div id="team" className="h-screen bg-[#111] flex items-center justify-center font-sans relative overflow-hidden">
             <div
                 className="absolute inset-0 opacity-[0.05] pointer-events-none"
                 style={{

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
 const HexArrowIcon = ({ color, arrowColor }) => (
     <div className="relative w-10 h-10 flex items-center justify-center">
@@ -151,6 +151,13 @@ const services = [
 const ServiceAccordion = () => {
     const [activeId, setActiveId] = useState(null);
     const [isDesktop, setIsDesktop] = useState(false);
+    const containerRef = useRef(null);
+
+    // Scroll-based animation
+    const { scrollY } = useScroll();
+    const yPosition = useTransform(scrollY, [0, 400], [200, 0]);
+    const opacity = useTransform(scrollY, [0, 200, 400], [0, 0.5, 1]);
+    const scale = useTransform(scrollY, [0, 400], [0.95, 1]);
 
     React.useEffect(() => {
         const checkLayout = () => setIsDesktop(window.innerWidth >= 1024);
@@ -174,7 +181,12 @@ const ServiceAccordion = () => {
     };
 
     return (
-        <div id="services" className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center overflow-x-hidden pt-20">
+        <motion.div
+            ref={containerRef}
+            id="services"
+            className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center pt-20 relative z-40 -mt-[200px]"
+            style={{ y: yPosition, opacity }}
+        >
             <div className="w-full max-w-[1600px] mb-8 lg:mb-10 px-2 self-center">
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
@@ -245,7 +257,7 @@ const ServiceAccordion = () => {
                     );
                 })}
             </div>
-        </div >
+        </motion.div>
     );
 };
 
