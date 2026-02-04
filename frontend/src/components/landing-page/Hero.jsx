@@ -424,10 +424,10 @@ export default function App() {
             <SmallLabel className="hidden lg:block absolute left-[3%] top-[35%] text-left">
                 WEB & APP<br />DEVELOPMENT
             </SmallLabel>
-            <SmallLabel className="hidden lg:block absolute left-[8%] bottom-[20%] text-left">
+            <SmallLabel className="hidden lg:block absolute left-[8%] bottom-[35%] text-left">
                 SYSTEM INTEGRATION<br />& CLOUD
             </SmallLabel>
-            <SmallLabel className="hidden lg:block absolute right-[8%] bottom-[5%] text-left">
+            <SmallLabel className="hidden lg:block absolute right-[8%] bottom-[35%] text-left">
                 MAINTENANCE<br />& SECURITY
             </SmallLabel>
 
