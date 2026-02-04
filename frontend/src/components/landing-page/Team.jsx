@@ -138,7 +138,7 @@ const Team = () => {
     };
 
     return (
-        <div id="team" className="h-screen bg-[#111] flex items-center justify-center font-sans relative overflow-hidden">
+        <div id="team" className="min-h-screen md:h-screen bg-[#111] flex items-center justify-center font-sans relative overflow-y-auto md:overflow-hidden">
             <div
                 className="absolute inset-0 opacity-[0.05] pointer-events-none"
                 style={{
@@ -150,9 +150,9 @@ const Team = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="bg-white w-full h-full shadow-2xl flex flex-col relative overflow-hidden"
+                className="bg-white w-full min-h-screen md:h-full shadow-2xl flex flex-col relative overflow-hidden"
             >
-                <div className="absolute top-10 right-10 pointer-events-none z-0">
+                <div className="absolute top-4 right-4 md:top-10 md:right-10 pointer-events-none z-0">
                     <AnimatePresence mode='wait'>
                         <motion.div
                             key={activeMember.id}
@@ -160,7 +160,7 @@ const Team = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.5 }}
-                            className="text-[12rem] md:text-[18rem] font-bold leading-none text-transparent opacity-5"
+                            className="text-[8rem] md:text-[12rem] lg:text-[18rem] font-bold leading-none text-transparent opacity-5"
                             style={{
                                 WebkitTextStroke: '2px rgba(0,0,0,0.1)',
                             }}
@@ -171,7 +171,7 @@ const Team = () => {
                 </div>
 
                 <div className="relative z-10 flex flex-col md:flex-row h-full w-full">
-                    <div className="w-full md:w-5/12 flex flex-col justify-between h-full p-8 md:p-12 lg:p-16 relative z-20">
+                    <div className="w-full md:w-5/12 flex flex-col justify-between h-auto md:h-full p-6 md:p-10 lg:p-10 relative z-20">
                         <div className="space-y-8 mt-4 relative z-30">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -189,7 +189,7 @@ const Team = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="text-6xl md:text-7xl lg:text-8xl font-black text-black leading-[0.85] tracking-tighter"
+                                className="text-5xl md:text-7xl lg:text-8xl font-black text-black leading-[0.85] tracking-tighter"
                             >
                                 Our<br />
                                 Team
@@ -207,8 +207,8 @@ const Team = () => {
                             </motion.div>
                         </div>
 
-                        <div className="mt-auto">
-                            <div ref={scrollContainerRef} className="flex space-x-6 overflow-x-auto pb-8 pt-4 no-scrollbar items-end pl-2">
+                        <div className="mt-8 md:mt-auto">
+                            <div ref={scrollContainerRef} className="flex space-x-4 md:space-x-6 overflow-x-auto pb-4 md:pb-8 pt-4 no-scrollbar items-end pl-2">
                                 {teamMembers.map((member, index) => (
                                     <motion.button
                                         key={member.id}
@@ -216,8 +216,8 @@ const Team = () => {
                                         whileHover={{ y: -10, scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         className={`group relative flex-shrink-0 transition-all duration-500 ease-out ${index === activeIndex
-                                            ? 'w-28 h-36 md:w-40 md:h-52 z-10'
-                                            : 'w-24 h-32 md:w-28 md:h-40 opacity-40 hover:opacity-100 z-0'
+                                            ? 'w-20 h-28 md:w-40 md:h-52 z-10'
+                                            : 'w-16 h-24 md:w-28 md:h-40 opacity-40 hover:opacity-100 z-0'
                                             }`}
                                     >
                                         <div className={`absolute inset-0 transform -skew-x-6 overflow-hidden rounded-2xl shadow-lg transition-all duration-500 ${index === activeIndex
@@ -267,12 +267,9 @@ const Team = () => {
                         </div>
                     </div>
 
-                    <div className="w-full md:w-7/12 relative h-full">
+                    <div className="w-full md:w-7/12 relative h-[700px] md:h-full mt-4 md:mt-0">
                         <motion.div
-                            className="absolute inset-0 bg-black z-0"
-                            style={{
-                                clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0% 100%)',
-                            }}
+                            className="absolute inset-0 bg-black z-0 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0%_100%)]"
                         >
                             <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-[#0a0a0a] to-gray-800/80"></div>
                             <div
@@ -285,7 +282,7 @@ const Team = () => {
                         </motion.div>
 
                         <div className="relative w-full h-full flex flex-col justify-end">
-                            <div className="absolute top-8 right-8 md:right-12 z-10 w-full md:max-w-[420px] pointer-events-auto">
+                            <div className="absolute top-4 left-4 right-4 md:top-8 md:right-12 md:left-auto z-30 w-auto md:w-full md:max-w-[420px] pointer-events-auto">
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={activeMember.id}
@@ -297,7 +294,7 @@ const Team = () => {
                                             visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.05, duration: 0.5 } },
                                             exit: { opacity: 0, x: 50 }
                                         }}
-                                        className="bg-white/10 backdrop-blur-md p-8 pb-24 rounded-3xl shadow-2xl border border-white/20 text-right"
+                                        className="bg-white/10 backdrop-blur-md p-6 md:p-8 pb-8 md:pb-24 rounded-3xl shadow-2xl border border-white/20 text-right"
                                     >
                                         <div className="flex flex-wrap gap-2 justify-end mb-4">
                                             {activeMember.skills.map((skill, idx) => (
@@ -341,7 +338,7 @@ const Team = () => {
                                         exit="exit"
                                         src={activeMember.image}
                                         alt={activeMember.name}
-                                        className="h-full w-auto object-contain object-bottom drop-shadow-2xl md:mr-32"
+                                        className="h-[55%] md:h-full w-auto object-contain object-bottom drop-shadow-2xl md:mr-[350px]"
                                     />
                                 </AnimatePresence>
                             </div>
