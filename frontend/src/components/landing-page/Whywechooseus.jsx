@@ -244,7 +244,7 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress, isMobile }) => 
                         opacity: 0.15
                     }}
                 >
-                    ZIPPYY
+                    ZIPPY
                 </div>
 
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -292,7 +292,7 @@ export default function WhyChooseUs() {
 
             <section ref={heroRef} className="min-h-[80vh] md:h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden py-20 md:py-0">
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-                    <h2 className="text-[45vw] font-black tracking-tighter select-none">ZIPPYY</h2>
+                    <h2 className="text-[45vw] font-black tracking-tighter select-none">ZIPPY</h2>
                 </div>
 
                 <div className="text-center space-y-6 md:space-y-8 z-10 max-w-5xl">
@@ -332,7 +332,7 @@ export default function WhyChooseUs() {
                         transition={{ duration: 1, delay: 0.5 }}
                         className="text-2xl md:text-2xl font-medium text-gray-500 max-w-3xl mx-auto leading-tight px-4"
                     >
-                        At Zippyy Digital Solutions, we provide tailored digital solutions designed to elevate your business
+                        At Zippy Digital Solutions, we provide tailored digital solutions designed to elevate your business
                     </motion.p>
                 </div>
 
