@@ -257,12 +257,7 @@ const Team = () => {
 
                                 <div className="h-[1px] bg-slate-200 flex-grow ml-4 mr-8 hidden md:block"></div>
 
-                                <motion.button
-                                    whileHover={{ x: 5 }}
-                                    className="hidden md:flex items-center text-xs font-bold text-black tracking-widest uppercase"
-                                >
-                                    View All Members <ArrowRight size={14} className="ml-2" />
-                                </motion.button>
+
                             </div>
                         </div>
                     </div>

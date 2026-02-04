@@ -187,7 +187,7 @@ export default function App() {
     // Opacity
     const opacityLine1 = useTransform(scrollY, [0, 300], [1, 1]); // Solid
     const opacityLine2 = useTransform(scrollY, [0, 200], [1, 0]); // FADE OUT
-    const opacityLine3 = useTransform(scrollY, [0, 500], [1, 1]); // Solid
+    const opacityLine3 = useTransform(scrollY, [0, 300, 500], [1, 1, 0]); // FADE OUT at end
 
     const [showOrbit, setShowOrbit] = useState(true);
 
@@ -248,24 +248,12 @@ export default function App() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    useEffect(() => {
-        if (showOrbit) {
-            // Disable scrolling
-            document.body.style.overflow = "hidden";
-            document.documentElement.style.overflow = "hidden";
-            window.scrollTo(0, 0);
-        } else {
-            // Re-enable scrolling
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-        }
-
-        // Cleanup to ensure scroll is restored
-        return () => {
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-        };
-    }, [showOrbit]);
+    // Scroll lock removed to prevent layout shift/scrollbar disappearance
+    // useEffect(() => {
+    //     if (showOrbit) {
+    //          ...
+    //     }
+    // }, [showOrbit]);
 
     const CenteredOrbit = () => {
         // Diagonal offset values
@@ -345,7 +333,6 @@ export default function App() {
             {/* CenteredOrbit moved inside layout below */}
 
             <motion.div
-                style={{ y: yText, scale: scaleText }}
                 className="w-full flex flex-col items-center justify-center gap-8 md:gap-10 pt-20 pb-16 md:pt-36 md:pb-32 pointer-events-none"
             >
                 {showOrbit && <CenteredOrbit />}

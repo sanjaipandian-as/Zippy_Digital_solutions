@@ -30,7 +30,7 @@ const NavBar = () => {
 
     const navLinks = [
         { name: "SERVICES", href: "#services" },
-        { name: "PRODUCTS", href: "#products" },
+        { name: "WHY CHOOSE US", href: "#why-choose-us" },
         { name: "TEAM", href: "#team" },
     ];
 
@@ -58,7 +58,7 @@ const NavBar = () => {
                 <div className="flex items-center gap-3 pointer-events-auto">
                     <img src="/zippybg.png" alt="Zippy Logo" className="h-10 md:h-16 w-auto object-contain" />
                     <div className="flex flex-col">
-                        <span className={`text-3xl md:text-5xl font-bebas tracking-wide leading-none pt-1 transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-black'}`}>ZIPPYY</span>
+                        <span className={`text-3xl md:text-5xl font-bebas tracking-wide leading-none pt-1 transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-black'}`}>ZIPPY</span>
                         <span className={`text-[8px] md:text-[10px] font-bold tracking-[0.3em] uppercase mt-0.5 transition-colors duration-300 ${isMenuOpen ? 'text-white' : 'text-gray-500'}`}>Digital solutions</span>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ const NavBar = () => {
                 ))}
 
                 <div className="absolute bottom-12 text-gray-500 font-bebas tracking-[0.3em] text-sm">
-                    ZIPPYY DIGITAL SOLUTIONS © 2026
+                    ZIPPY DIGITAL SOLUTIONS © 2026
                 </div>
             </div>
         </>
