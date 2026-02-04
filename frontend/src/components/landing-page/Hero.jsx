@@ -248,6 +248,31 @@ export default function App() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    useEffect(() => {
+        if (showOrbit) {
+            // Disable scrolling
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.height = "100vh"; // precise control
+            document.documentElement.style.height = "100vh";
+            window.scrollTo(0, 0);
+        } else {
+            // Re-enable scrolling
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+            document.body.style.height = "";
+            document.documentElement.style.height = "";
+        }
+
+        // Cleanup to ensure scroll is restored
+        return () => {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+            document.body.style.height = "";
+            document.documentElement.style.height = "";
+        };
+    }, [showOrbit]);
+
     const CenteredOrbit = () => {
         // Dynamic values based on screen size
         const radius = isMobile ? -70 : -120; // Smaller orbit radius on mobile
