@@ -204,8 +204,8 @@ export default function App() {
         }
     };
 
-    const fontClass = "font-bebas text-[19vw] sm:text-[20vw] md:text-[11rem] lg:text-[14.5rem] leading-[0.8] md:leading-[0.75] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
-    const shapeWrapper = "w-[17vw] h-[17vw] sm:w-[18vw] sm:h-[18vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] mx-2 sm:mx-2.5 md:mx-6 shrink-0 self-center z-20";
+    const fontClass = "font-bebas text-[24vw] md:text-[11rem] lg:text-[14.5rem] leading-[0.75] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
+    const shapeWrapper = "w-[21vw] h-[21vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] mx-2 md:mx-6 shrink-0 self-center z-20";
 
     useEffect(() => {
         // Force scroll to top on mount/reload
@@ -269,16 +269,16 @@ export default function App() {
 
     const CenteredOrbit = () => {
         // Diagonal offset values
-        const offset = isMobile ? 50 : 150;
+        const offset = isMobile ? 60 : 150;
 
         return (
             <motion.div
                 className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
             >
-                <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-12 lg:gap-16">
+                <div className="flex items-center justify-center gap-4 md:gap-12 lg:gap-16">
                     {/* Icon 1: Asterisk - From Left -> Horizontal -> Up-Left Diagonal */}
                     <motion.div
-                        className="w-[17vw] h-[17vw] sm:w-[18vw] sm:h-[18vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
+                        className="w-[21vw] h-[21vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
                         initial={{ x: "-100vw", y: 0, opacity: 0 }}
                         animate={{
                             x: 0,
@@ -298,7 +298,7 @@ export default function App() {
 
                     {/* Icon 2: Cluster - From Bottom -> Horizontal -> Center Diagonal */}
                     <motion.div
-                        className="w-[17vw] h-[17vw] sm:w-[18vw] sm:h-[18vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
+                        className="w-[21vw] h-[21vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
                         initial={{ y: "100vh", opacity: 0 }}
                         animate={{
                             y: ["100vh", 0, 0], // 0 to 0.5 (Enter), 0.5 to 1 (Stay)
@@ -316,7 +316,7 @@ export default function App() {
 
                     {/* Icon 3: Arrow - From Right -> Horizontal -> Down-Right Diagonal */}
                     <motion.div
-                        className="w-[17vw] h-[17vw] sm:w-[18vw] sm:h-[18vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
+                        className="w-[21vw] h-[21vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] relative"
                         initial={{ x: "100vw", y: 0, opacity: 0 }}
                         animate={{
                             x: 0,
@@ -339,18 +339,18 @@ export default function App() {
     };
 
     return (
-        <div className="relative w-full min-h-screen flex flex-col justify-center bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black">
+        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black overflow-x-hidden">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
             {/* CenteredOrbit moved inside layout below */}
 
             <motion.div
                 style={{ y: yText, scale: scaleText }}
-                className="w-full flex flex-col items-center justify-center gap-8 sm:gap-10 md:gap-10 py-12 md:pt-36 md:pb-32 pointer-events-none"
+                className="w-full flex flex-col items-center justify-center gap-8 md:gap-10 pt-20 pb-16 md:pt-36 md:pb-32 pointer-events-none"
             >
                 {showOrbit && <CenteredOrbit />}
-                <motion.div style={{ opacity: opacityLine1, y: yLine1, x: xLine1 }} className="relative flex items-center justify-center w-full px-4 sm:px-5 md:px-4 text-center overflow-visible">
-                    <motion.div className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-2 gap-y-1 sm:gap-y-1.5">
+                <motion.div style={{ opacity: opacityLine1, y: yLine1, x: xLine1 }} className="relative flex items-center justify-center w-full px-2 md:px-4 text-center overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
                         <motion.span {...textFade} className={fontClass}>TRANS</motion.span>
                         <div className={`${shapeWrapper} relative`}>
                             {!showOrbit && (
@@ -367,8 +367,8 @@ export default function App() {
                     </motion.div>
                 </motion.div>
 
-                <motion.div style={{ opacity: opacityLine2, y: yLine2 }} className="relative flex items-center justify-center w-full px-4 sm:px-5 md:px-4 text-center overflow-visible">
-                    <motion.div className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-2 gap-y-1 sm:gap-y-1.5">
+                <motion.div style={{ opacity: opacityLine2, y: yLine2 }} className="relative flex items-center justify-center w-full px-2 md:px-4 text-center overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
                         <motion.span {...textFade} className={fontClass}>IDEAS</motion.span>
                         <div className={shapeWrapper}>
                             {!showOrbit && (
@@ -390,16 +390,16 @@ export default function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleOpenContact}
-                            className={`basis-full md:basis-auto h-[52px] sm:h-[56px] md:h-[65px] lg:h-[80px] bg-black text-white px-7 sm:px-9 md:px-12 rounded-full flex items-center justify-center gap-2.5 sm:gap-3 md:gap-6 mt-5 sm:mt-6 md:mt-0 md:ml-12 self-center group transition-all duration-300 pointer-events-auto shadow-2xl ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
+                            className={`basis-full md:basis-auto h-[55px] md:h-[65px] lg:h-[80px] bg-black text-white px-8 md:px-12 rounded-full flex items-center justify-center gap-3 md:gap-6 mt-6 md:mt-0 md:ml-12 self-center group transition-all duration-300 pointer-events-auto shadow-2xl ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
                         >
-                            <span className="font-sans font-black text-[15px] sm:text-base md:text-lg whitespace-nowrap uppercase tracking-tighter">Work with us</span>
-                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform sm:w-[18px] sm:h-[18px]"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
+                            <span className="font-sans font-black text-base md:text-lg whitespace-nowrap uppercase tracking-tighter">Work with us</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
                         </motion.button>
                     </motion.div>
                 </motion.div>
 
-                <motion.div style={{ opacity: opacityLine3, y: yLine3, x: xLine3 }} className="relative flex items-center justify-center w-full px-4 sm:px-5 md:px-4 text-center overflow-visible">
-                    <motion.div className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-2 gap-y-1 sm:gap-y-1.5">
+                <motion.div style={{ opacity: opacityLine3, y: yLine3, x: xLine3 }} className="relative flex items-center justify-center w-full px-2 md:px-4 text-center overflow-visible">
+                    <motion.div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
                         <motion.span {...textFade} className={`${fontClass} !text-[#F0FF80]`}>EXPERI</motion.span>
                         <div className={`${shapeWrapper} !rounded-full overflow-hidden`}>
                             {!showOrbit && (
