@@ -7,13 +7,13 @@ import Team from './Team';
 
 const ArrowOctagonIcon = () => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.85em] h-[0.85em] mx-[0.2em] lg:mx-[0.1em] align-baseline -mb-[0.05em]">
-        <path fillRule="evenodd" clipRule="evenodd" d="M7.5 2L2 7.5V16.5L7.5 22H16.5L22 16.5V7.5L16.5 2H7.5Z" fill="black" />
-        <path d="M7 17L17 7M17 7H10M17 7V14" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M7.5 2L2 7.5V16.5L7.5 22H16.5L22 16.5V7.5L16.5 2H7.5Z" fill="#ffe01b" />
+        <path d="M7 17L17 7M17 7H10M17 7V14" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const HexClusterIcon = () => (
-    <svg viewBox="35 35 110 110" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.8em] h-[0.8em] mr-[0.25em] align-baseline -mb-[0.05em] text-black">
+    <svg viewBox="35 35 110 110" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.8em] h-[0.8em] mr-[0.25em] align-baseline -mb-[0.05em] text-[#ffe01b]">
         <rect x="40" y="40" width="100" height="25" rx="8" fill="currentColor" />
         <rect x="55" y="75" width="70" height="25" rx="8" fill="currentColor" />
         <rect x="70" y="110" width="40" height="25" rx="8" fill="currentColor" />
@@ -136,7 +136,7 @@ const ProjectShowcase = () => {
     const column2 = [projects[4], projects[5], projects[6]];
 
     return (
-        <section className="w-full min-h-full bg-[#E5E5E5] flex flex-col px-6 sm:px-10 lg:px-14 pt-4 pb-10 lg:pb-20 overflow-hidden relative font-sans cursor-default">
+        <section className="w-full min-h-full bg-white flex flex-col px-6 sm:px-10 lg:px-14 pt-4 pb-10 lg:pb-20 overflow-hidden relative font-sans cursor-default">
             <GrainOverlay />
 
             <div className="z-20 pt-0 mb-12">
@@ -146,10 +146,10 @@ const ProjectShowcase = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-gray-400 mb-2">
+                    <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-[#ffe01b] mb-2">
                         Projects
                     </span>
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-black tracking-tight leading-none">
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-zinc-900 tracking-tight leading-none">
                         CHECKOUT OUR SERVICES
                     </h3>
                 </motion.div>
@@ -169,7 +169,7 @@ const ProjectShowcase = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8 }}
-                                className="text-white text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] whitespace-normal md:whitespace-nowrap leading-[0.8]"
+                                className="text-zinc-400 text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] whitespace-normal md:whitespace-nowrap leading-[0.8]"
                             >
                                 WE HAVE COMPLETED
                             </motion.div>
@@ -182,10 +182,10 @@ const ProjectShowcase = () => {
                                 transition={{ duration: 0.8, delay: 0.1 }}
                                 className="flex flex-wrap items-center text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] whitespace-normal md:whitespace-nowrap leading-[0.8]"
                             >
-                                <span className="text-white mr-[0.2em]">MORE THAN</span>
-                                <div className="inline-flex items-center text-black">
+                                <span className="text-zinc-400 mr-[0.2em]">MORE THAN</span>
+                                <div className="inline-flex items-center text-zinc-900">
                                     <ArrowOctagonIcon />
-                                    <span className="ml-[0.1em]">50+</span>
+                                    <span className="ml-[0.1em]">50<span className="text-[#ffe01b]">+</span></span>
                                 </div>
                             </motion.div>
                         </div>
@@ -198,7 +198,7 @@ const ProjectShowcase = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-black text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
+                                className="text-zinc-900 text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
                             >
                                 REAL WORLD
                             </motion.div>
@@ -209,7 +209,7 @@ const ProjectShowcase = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: 0.3 }}
-                                className="flex flex-wrap items-center text-black text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
+                                className="flex flex-wrap items-center text-zinc-900 text-[9.5vw] sm:text-[12.5vw] lg:text-[11.5vw] leading-[0.8]"
                             >
                                 <HexClusterIcon />
                                 <span>PROJECTS.</span>
@@ -219,7 +219,7 @@ const ProjectShowcase = () => {
 
                     {/* Right Side: Description Text (Aligned to bottom right) */}
                     <div className="mt-8 lg:mt-0 lg:mb-4 lg:ml-10 max-w-[280px] sm:max-w-xs md:max-w-lg text-left self-start lg:self-end">
-                        <p className="text-xl sm:text-2xl md:text-3xl font-bebas text-black leading-[0.85] tracking-wide uppercase">
+                        <p className="text-xl sm:text-2xl md:text-3xl font-bebas text-zinc-900 leading-[0.85] tracking-wide uppercase">
                             <WordReveal
                                 delay={0.6}
                                 text="We engineer sophisticated digital platforms that go far beyond visuals. Our team builds intuitive, high-performance websites and applications designed to engage and retain users."

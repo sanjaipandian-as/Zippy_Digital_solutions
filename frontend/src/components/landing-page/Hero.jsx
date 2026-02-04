@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import ContactUs from "./CotactUs";
 
 const AsteriskShape = () => (
-    <div className="w-full h-full bg-[#F0FF80] flex items-center justify-center p-4">
+    <div className="w-full h-full bg-[#ffe01b] flex items-center justify-center p-4">
         <svg viewBox="0 0 16 16" className="w-full h-full text-black" fill="currentColor">
             <path d="M5.6906 6.00001L3.16512 1.62576C4.50811 0.605527 6.18334 0 8 0C8.37684 0 8.74759 0.0260554 9.11056 0.076463L5.6906 6.00001Z" />
             <path d="M5.11325 9L1.69363 3.07705C0.632438 4.43453 0 6.14341 0 8C0 8.33866 0.0210434 8.67241 0.0618939 9H5.11325Z" />
@@ -19,7 +19,7 @@ const AsteriskShape = () => (
 );
 
 const ClusterShape = () => (
-    <div className="w-full h-full bg-[#e0e0e0] flex items-center justify-center p-0">
+    <div className="w-full h-full bg-white flex items-center justify-center p-0">
         <svg viewBox="0 0 150 150" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 130 L75 25 L130 130"
                 stroke="black" strokeWidth="22" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -39,9 +39,9 @@ const ArrowIconShape = () => (
                 fill="black"
             />
             <g transform="translate(10, 15)">
-                <path d="M60 135 L78 78 L63 35" stroke="#e0e0e0" strokeWidth="14" strokeLinecap="round" fill="none" />
-                <path d="M120 135 L102 78 L117 35" stroke="#e0e0e0" strokeWidth="14" strokeLinecap="round" fill="none" />
-                <circle cx="90" cy="75" r="14" fill="#e0e0e0" />
+                <path d="M60 135 L78 78 L63 35" stroke="white" strokeWidth="14" strokeLinecap="round" fill="none" />
+                <path d="M120 135 L102 78 L117 35" stroke="white" strokeWidth="14" strokeLinecap="round" fill="none" />
+                <circle cx="90" cy="75" r="14" fill="white" />
             </g>
         </svg>
     </div>
@@ -56,7 +56,7 @@ const SmallLabel = ({ children, className = "" }) => (
         className={`absolute font-sans text-[10px] md:text-[11px] font-bold text-zinc-800 uppercase tracking-[0.2em] leading-relaxed z-50 ${className}`}
     >
         <div className="flex items-center gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F0FF80]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ffe01b]" />
             {children}
         </div>
     </motion.div>
@@ -153,7 +153,7 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
             {isOpen && (
                 <div className="fixed inset-0 z-[10002] pointer-events-none">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-md pointer-events-auto" onClick={handleClose} />
-                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#F0FF80] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
+                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ffe01b] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
                         <AnimatePresence mode="wait">
 
                             {status === "modal" && showContent && (
@@ -204,7 +204,7 @@ export default function App() {
         }
     };
 
-    const fontClass = "font-bebas text-[24vw] md:text-[11rem] lg:text-[14.5rem] leading-[0.75] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
+    const fontClass = "font-bebas text-[23vw] md:text-[10.5rem] lg:text-[13.8rem] leading-[0.75] tracking-tight text-zinc-900 select-none whitespace-normal md:whitespace-nowrap";
     const shapeWrapper = "w-[21vw] h-[21vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] mx-2 md:mx-6 shrink-0 self-center z-20";
 
     useEffect(() => {
@@ -327,13 +327,13 @@ export default function App() {
     };
 
     return (
-        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black overflow-x-hidden">
+        <div className="relative w-full min-h-screen bg-white selection:bg-[#ffe01b] selection:text-black overflow-x-hidden">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
             {/* CenteredOrbit moved inside layout below */}
 
             <motion.div
-                className="w-full flex flex-col items-center justify-center gap-8 md:gap-10 pt-20 pb-16 md:pt-36 md:pb-32 pointer-events-none"
+                className="w-full flex flex-col items-center justify-center gap-6 md:gap-8 pt-20 pb-16 md:pt-36 md:pb-32 pointer-events-none"
             >
                 {showOrbit && <CenteredOrbit />}
                 <motion.div style={{ opacity: opacityLine1, y: yLine1, x: xLine1 }} className="relative flex items-center justify-center w-full px-2 md:px-4 text-center overflow-visible">
@@ -387,7 +387,7 @@ export default function App() {
 
                 <motion.div style={{ opacity: opacityLine3, y: yLine3, x: xLine3 }} className="relative flex items-center justify-center w-full px-2 md:px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
-                        <motion.span {...textFade} className={`${fontClass} !text-[#F0FF80]`}>EXPERI</motion.span>
+                        <motion.span {...textFade} className={`${fontClass} !text-[#ffe01b]`}>EXPERI</motion.span>
                         <div className={`${shapeWrapper} !rounded-full overflow-hidden`}>
                             {!showOrbit && (
                                 <motion.div
@@ -399,7 +399,7 @@ export default function App() {
                                 </motion.div>
                             )}
                         </div>
-                        <motion.span {...textFade} className={`${fontClass} !text-[#F0FF80]`}>ENCES</motion.span>
+                        <motion.span {...textFade} className={`${fontClass} !text-[#ffe01b]`}>ENCES</motion.span>
                     </motion.div>
                 </motion.div>
             </motion.div>
