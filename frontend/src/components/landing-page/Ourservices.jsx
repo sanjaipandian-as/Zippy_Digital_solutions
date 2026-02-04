@@ -30,7 +30,7 @@ const services = [
         title: "Web Development",
         subItems: ["Basic Website Design", "Custom Website Design", "Responsive Web Design", "E-commerce Website Design", "Landing Page Design", "One-Page Website", "Mobile-Optimized Website", "Multilingual Website Development", "CMS Website", "Custom Web Development", "Website Redesign", "Maintenance & Support"],
         category: "ENGINEERING",
-        bgColor: "bg-[#F0FF80]",
+        bgColor: "bg-[#ffe01b]",
         textColor: "text-black",
         gridClass: "lg:col-span-2 lg:row-span-1",
         colIndex: 0,
@@ -41,8 +41,8 @@ const services = [
         title: "Branding",
         subItems: ["Logo Design", "Brand Identity Creation", "Guidelines & Strategy", "Business Card & Stationery", "Packaging Design", "Corporate Identity", "Brand Positioning", "Messaging & Voice"],
         category: "CREATIVE",
-        bgColor: "bg-[#EFE1B5]",
-        textColor: "text-black",
+        bgColor: "bg-zinc-900",
+        textColor: "text-white",
         gridClass: "lg:col-span-1 lg:row-span-1",
         colIndex: 2,
         rowIndex: 0
@@ -52,7 +52,7 @@ const services = [
         title: "Digital Marketing",
         subItems: ["SEO (Local, Int, Tech)", "PPC Advertising", "Google/FB/IG Ads", "Social Media Marketing", "Reputation Management", "Conversion Rate Optimization"],
         category: "MARKETING",
-        bgColor: "bg-[#F0FF80]",
+        bgColor: "bg-[#ffe01b]",
         textColor: "text-black",
         gridClass: "lg:col-span-1 lg:row-span-2",
         colIndex: 3,
@@ -85,7 +85,7 @@ const services = [
         title: "Mobile Apps",
         subItems: ["iOS & Android Dev", "Cross-Platform", "App UI/UX Design", "App Store Optimization", "PWA Development", "Prototyping"],
         category: "ENGINEERING",
-        bgColor: "bg-[#F0FF80]",
+        bgColor: "bg-[#ffe01b]",
         textColor: "text-black",
         gridClass: "lg:col-span-1 lg:row-span-1",
         colIndex: 0,
@@ -96,8 +96,8 @@ const services = [
         title: "Content & Video",
         subItems: ["Copywriting & Blogging", "SEO Content", "Video Production", "Explainer Videos", "Social Media Copy", "Whitepapers"],
         category: "PRODUCTION",
-        bgColor: "bg-[#EFE1B5]",
-        textColor: "text-black",
+        bgColor: "bg-zinc-900",
+        textColor: "text-white",
         gridClass: "lg:col-span-1 lg:row-span-2",
         colIndex: 1,
         rowIndex: 2
@@ -140,11 +140,22 @@ const services = [
         title: "Specialized",
         subItems: ["Voice Search Opt", "Chatbot Dev", "AI/ML Solutions", "Blockchain", "VR/AR Design", "CRM/ERP Integration"],
         category: "INNOVATION",
-        bgColor: "bg-[#F0FF80]",
+        bgColor: "bg-[#ffe01b]",
         textColor: "text-black",
         gridClass: "lg:col-span-2 lg:row-span-1",
         colIndex: 2,
         rowIndex: 3
+    },
+    {
+        id: 12,
+        title: "IT STAFFING",
+        subItems: ["Permanent Staffing", "Contract Staffing", "Contract-to-Hire", "Dedicated Development Teams", "Remote IT Resources", "Project-Based Staffing"],
+        category: "RESOURCES",
+        bgColor: "bg-white",
+        textColor: "text-black",
+        gridClass: "lg:col-span-4 lg:row-span-1",
+        colIndex: 0,
+        rowIndex: 4
     }
 ];
 
@@ -168,10 +179,10 @@ const ServiceAccordion = () => {
 
     const getGridStyles = () => {
         if (!isDesktop) return {};
-        if (!activeId) return { gridTemplateColumns: "1fr 1fr 1fr 1fr", gridTemplateRows: "1fr 1fr 1fr 1fr" };
+        if (!activeId) return { gridTemplateColumns: "1fr 1fr 1fr 1fr", gridTemplateRows: "1fr 1fr 1fr 1fr 1fr" };
         const activeItem = services.find(s => s.id === activeId);
         const cols = [0.7, 0.7, 0.7, 0.7];
-        const rows = [0.7, 0.7, 0.7, 0.7];
+        const rows = [0.7, 0.7, 0.7, 0.7, 0.7];
         cols[activeItem.colIndex] = 1.9;
         rows[activeItem.rowIndex] = 1.4;
         return {
@@ -203,7 +214,7 @@ const ServiceAccordion = () => {
                 </motion.div>
             </div>
             <div
-                className="w-full max-w-[1600px] flex flex-col gap-4 lg:gap-3 lg:grid lg:h-[85vh] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                className="w-full max-w-[1600px] flex flex-col gap-4 lg:gap-3 lg:grid lg:h-[105vh] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 style={getGridStyles()}
                 onMouseLeave={() => setActiveId(null)}
             >
@@ -224,7 +235,7 @@ const ServiceAccordion = () => {
                                     <motion.div layout="position">
                                         <HexArrowIcon
                                             color={service.textColor === 'text-white' ? 'white' : 'black'}
-                                            arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#F0FF80' : null}
+                                            arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#ffe01b' : null}
                                         />
                                     </motion.div>
                                     <motion.span layout="position" className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">
