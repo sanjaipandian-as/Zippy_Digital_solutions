@@ -30,7 +30,7 @@ const services = [
         title: "Web Development",
         subItems: ["Basic Website Design", "Custom Website Design", "Responsive Web Design", "E-commerce Website Design", "Landing Page Design", "One-Page Website", "Mobile-Optimized Website", "Multilingual Website Development", "CMS Website", "Custom Web Development", "Website Redesign", "Maintenance & Support"],
         category: "ENGINEERING",
-        bgColor: "bg-[#5DD3B6]",
+        bgColor: "bg-[#F0FF80]",
         textColor: "text-black",
         gridClass: "lg:col-span-2 lg:row-span-1",
         colIndex: 0,
@@ -52,7 +52,7 @@ const services = [
         title: "Digital Marketing",
         subItems: ["SEO (Local, Int, Tech)", "PPC Advertising", "Google/FB/IG Ads", "Social Media Marketing", "Reputation Management", "Conversion Rate Optimization"],
         category: "MARKETING",
-        bgColor: "bg-[#5DD3B6]",
+        bgColor: "bg-[#F0FF80]",
         textColor: "text-black",
         gridClass: "lg:col-span-1 lg:row-span-2",
         colIndex: 3,
@@ -85,7 +85,7 @@ const services = [
         title: "Mobile Apps",
         subItems: ["iOS & Android Dev", "Cross-Platform", "App UI/UX Design", "App Store Optimization", "PWA Development", "Prototyping"],
         category: "ENGINEERING",
-        bgColor: "bg-[#5DD3B6]",
+        bgColor: "bg-[#F0FF80]",
         textColor: "text-black",
         gridClass: "lg:col-span-1 lg:row-span-1",
         colIndex: 0,
@@ -140,7 +140,7 @@ const services = [
         title: "Specialized",
         subItems: ["Voice Search Opt", "Chatbot Dev", "AI/ML Solutions", "Blockchain", "VR/AR Design", "CRM/ERP Integration"],
         category: "INNOVATION",
-        bgColor: "bg-[#5DD3B6]",
+        bgColor: "bg-[#F0FF80]",
         textColor: "text-black",
         gridClass: "lg:col-span-2 lg:row-span-1",
         colIndex: 2,
@@ -184,7 +184,7 @@ const ServiceAccordion = () => {
         <motion.div
             ref={containerRef}
             id="services"
-            className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center pt-20 relative z-40 -mt-[200px]"
+            className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center pt-20 relative z-40 -mt-[200px] overflow-hidden"
             style={{ y: yPosition, opacity }}
         >
             <div className="w-full max-w-[1600px] mb-8 lg:mb-10 px-2 self-center">
@@ -224,7 +224,7 @@ const ServiceAccordion = () => {
                                     <motion.div layout="position">
                                         <HexArrowIcon
                                             color={service.textColor === 'text-white' ? 'white' : 'black'}
-                                            arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#5DD3B6' : null}
+                                            arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#F0FF80' : null}
                                         />
                                     </motion.div>
                                     <motion.span layout="position" className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">

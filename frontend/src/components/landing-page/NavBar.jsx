@@ -68,7 +68,7 @@ const NavBar = () => {
                     {navLinks.map((link) => (
                         <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className="hover:opacity-60 transition-opacity cursor-pointer">{link.name}</a>
                     ))}
-                </div>  
+                </div>
 
                 {/* Mobile Menu Toggle */}
                 <button
@@ -91,7 +91,7 @@ const NavBar = () => {
                         key={link.name}
                         href={link.href}
                         onClick={(e) => handleNavClick(e, link.href)}
-                        className={`text-6xl font-bebas text-[#ccff00] tracking-widest hover:text-white transition-colors duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+                        className={`text-6xl font-bebas text-[#F0FF80] tracking-widest hover:text-white transition-colors duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
                             }`}
                         style={{ transitionDelay: `${i * 100}ms` }}
                     >

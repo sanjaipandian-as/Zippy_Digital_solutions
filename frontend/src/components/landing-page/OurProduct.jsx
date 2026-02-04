@@ -181,8 +181,8 @@ export default function App() {
     const entranceY = useTransform(entranceProgress, [0, 1], [100, 0]);
 
     return (
-        <div id="products" ref={containerRef} className="relative h-[1200vh] md:h-[1600vh]">
-            <div className="sticky top-0 h-screen bg-white text-black font-sans overflow-hidden select-none pt-4 pb-2">
+        <div id="products" ref={containerRef} className="relative h-[1200vh] md:h-[1600vh] bg-white">
+            <div className="sticky top-0 h-screen bg-white text-black font-sans overflow-hidden select-none pt-4 pb-2 flex items-center justify-center">
                 <motion.div
                     style={{ scale: entranceScale, opacity: entranceOpacity, y: entranceY }}
                     className="flex flex-col items-center justify-center md:justify-start w-full h-full"

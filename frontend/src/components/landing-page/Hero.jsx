@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import ContactUs from "./CotactUs";
 
 const AsteriskShape = () => (
-    <div className="w-full h-full bg-[#ccff00] flex items-center justify-center p-4">
+    <div className="w-full h-full bg-[#F0FF80] flex items-center justify-center p-4">
         <svg viewBox="0 0 16 16" className="w-full h-full text-black" fill="currentColor">
             <path d="M5.6906 6.00001L3.16512 1.62576C4.50811 0.605527 6.18334 0 8 0C8.37684 0 8.74759 0.0260554 9.11056 0.076463L5.6906 6.00001Z" />
             <path d="M5.11325 9L1.69363 3.07705C0.632438 4.43453 0 6.14341 0 8C0 8.33866 0.0210434 8.67241 0.0618939 9H5.11325Z" />
@@ -49,12 +49,16 @@ const ArrowIconShape = () => (
 
 const SmallLabel = ({ children, className = "" }) => (
     <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3, duration: 1 }}
-        className={`absolute font-sans text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest leading-tight ${className}`}
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 2.8, duration: 1 }}
+        className={`absolute font-sans text-[10px] md:text-[11px] font-bold text-zinc-800 uppercase tracking-[0.2em] leading-relaxed z-50 ${className}`}
     >
-        {children}
+        <div className="flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F0FF80]" />
+            {children}
+        </div>
     </motion.div>
 );
 
@@ -149,7 +153,7 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
             {isOpen && (
                 <div className="fixed inset-0 z-[10002] pointer-events-none">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-md pointer-events-auto" onClick={handleClose} />
-                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ccff00] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
+                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#F0FF80] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
                         <AnimatePresence mode="wait">
 
                             {status === "modal" && showContent && (
@@ -200,8 +204,8 @@ export default function App() {
         }
     };
 
-    const fontClass = "font-bebas text-[18vw] md:text-[8rem] lg:text-[11rem] leading-[0.85] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
-    const shapeWrapper = "w-[16vw] h-[16vw] md:w-[7rem] md:h-[7rem] lg:w-[9rem] lg:h-[9rem] mx-2 md:mx-4 shrink-0 self-center z-20";
+    const fontClass = "font-bebas text-[20vw] md:text-[11rem] lg:text-[14.5rem] leading-[0.75] tracking-tight text-white select-none whitespace-normal md:whitespace-nowrap";
+    const shapeWrapper = "w-[18vw] h-[18vw] md:w-[8rem] md:h-[8rem] lg:w-[11.5rem] lg:h-[11.5rem] mx-2 md:mx-6 shrink-0 self-center z-20";
 
     useEffect(() => {
         // Force scroll to top on mount/reload
@@ -346,7 +350,7 @@ export default function App() {
     };
 
     return (
-        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#ccff00] selection:text-black">
+        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black overflow-x-hidden">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
             {/* CenteredOrbit moved inside layout below */}
@@ -358,7 +362,7 @@ export default function App() {
                 {showOrbit && <CenteredOrbit />}
                 <motion.div style={{ opacity: opacityLine1, y: yLine1, x: xLine1 }} className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
-                        <motion.span {...textFade} className={fontClass}>TURNING</motion.span>
+                        <motion.span {...textFade} className={fontClass}>TRANS</motion.span>
                         <div className={`${shapeWrapper} relative`}>
                             {!showOrbit && (
                                 <motion.div className="w-full h-full" layoutId="icon1" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
@@ -366,13 +370,13 @@ export default function App() {
                                 </motion.div>
                             )}
                         </div>
-                        <motion.span {...textFade} className={fontClass}>YOUR IDEAS</motion.span>
+                        <motion.span {...textFade} className={fontClass}>FORMING</motion.span>
                     </motion.div>
                 </motion.div>
 
                 <motion.div style={{ opacity: opacityLine2, y: yLine2 }} className="relative flex items-center justify-center w-full px-4 text-center gap-2 md:gap-4 overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
-                        <motion.span {...textFade} className={fontClass}>INTO</motion.span>
+                        <motion.span {...textFade} className={fontClass}>IDEAS</motion.span>
                         <div className={shapeWrapper}>
                             {!showOrbit && (
                                 <motion.div className="w-full h-full" layoutId="icon2" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
@@ -380,7 +384,7 @@ export default function App() {
                                 </motion.div>
                             )}
                         </div>
-                        <motion.span {...textFade} className={fontClass}>IMPACTFUL</motion.span>
+                        <motion.span {...textFade} className={fontClass}>INTO</motion.span>
                         <motion.button
                             ref={buttonRef}
                             initial={{ opacity: 0, scale: 0.8 }}
@@ -389,31 +393,43 @@ export default function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={handleOpenContact}
-                            className={`h-[50px] md:h-[70px] lg:h-[80px] bg-black text-white px-6 md:px-10 rounded-full flex items-center gap-2 md:gap-4 ml-0 mt-4 md:mt-0 md:ml-8 self-center group transition-all duration-300 pointer-events-auto ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
+                            className={`h-[45px] md:h-[65px] lg:h-[80px] bg-black text-white px-8 md:px-12 rounded-full flex items-center gap-3 md:gap-6 ml-0 mt-4 md:mt-0 md:ml-12 self-center group transition-all duration-300 pointer-events-auto shadow-2xl ${isContactOpen ? 'opacity-0 pointer-events-none scale-50' : 'opacity-100'}`}
                         >
-                            <span className="font-sans font-medium text-sm md:text-xl whitespace-nowrap uppercase tracking-tighter">Innovate With Us</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
+                            <span className="font-sans font-black text-xs md:text-lg whitespace-nowrap uppercase tracking-tighter">Work with us</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
                         </motion.button>
                     </motion.div>
-                    <SmallLabel className="hidden lg:block absolute right-[12%] top-0 text-left">AI SOLUTIONS<br />BUILT FOR YOU</SmallLabel>
                 </motion.div>
 
                 <motion.div style={{ opacity: opacityLine3, y: yLine3, x: xLine3 }} className="relative flex items-center justify-center w-full px-4 text-center overflow-visible">
                     <motion.div className="flex flex-wrap justify-center items-center">
-                        <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>EXPERI</motion.span>
-                        <div className={shapeWrapper}>
+                        <motion.span {...textFade} className={`${fontClass} !text-[#F0FF80]`}>EXPERI</motion.span>
+                        <div className={`${shapeWrapper} !rounded-full overflow-hidden`}>
                             {!showOrbit && (
                                 <motion.div className="w-full h-full" layoutId="icon3" transition={{ type: "spring", stiffness: 300, damping: 30 }}>
                                     <ArrowIconShape />
                                 </motion.div>
                             )}
                         </div>
-                        <motion.span {...textFade} className={`${fontClass} !text-[#ccff00]`}>ENCES</motion.span>
+                        <motion.span {...textFade} className={`${fontClass} !text-[#F0FF80]`}>ENCES</motion.span>
                     </motion.div>
-                    <SmallLabel className="hidden lg:block absolute right-[18%] bottom-0 text-left">ONGOING MAINTENANCE<br />& PROTECTION</SmallLabel>
-                    <SmallLabel className="hidden lg:block absolute left-[18%] bottom-4 text-right">CLOUD & SYSTEM<br />INTEGRATION</SmallLabel>
                 </motion.div>
             </motion.div>
+
+            {/* Sub-labels positioned to match reference image exactly */}
+            <SmallLabel className="hidden lg:block absolute left-[56%] top-[5%] text-left">
+                CUSTOM AI SOLUTIONS<br />& INTEGRATIONS
+            </SmallLabel>
+            <SmallLabel className="hidden lg:block absolute left-[3%] top-[35%] text-left">
+                WEB & APP<br />DEVELOPMENT
+            </SmallLabel>
+            <SmallLabel className="hidden lg:block absolute left-[8%] bottom-[20%] text-left">
+                SYSTEM INTEGRATION<br />& CLOUD
+            </SmallLabel>
+            <SmallLabel className="hidden lg:block absolute right-[8%] bottom-[5%] text-left">
+                MAINTENANCE<br />& SECURITY
+            </SmallLabel>
+
             <MorphingModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} initialPos={buttonPos} />
         </div>
     );

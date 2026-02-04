@@ -239,7 +239,7 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress, isMobile }) => 
                 <div
                     className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12vw] md:text-[8rem] font-black whitespace-nowrap pointer-events-none select-none italic tracking-tighter"
                     style={{
-                        WebkitTextStroke: `2px ${item.textColor === '#000000' ? '#000000' : '#ccff00'}`,
+                        WebkitTextStroke: `2px ${item.textColor === '#000000' ? '#000000' : '#F0FF80'}`,
                         color: 'transparent',
                         opacity: 0.15
                     }}
@@ -248,8 +248,8 @@ const FeatureCard = ({ item, index, totalCards, scrollYProgress, isMobile }) => 
                 </div>
 
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            </motion.div>
-        </div>
+            </motion.div >
+        </div >
     );
 };
 
