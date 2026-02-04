@@ -253,30 +253,23 @@ export default function App() {
             // Disable scrolling
             document.body.style.overflow = "hidden";
             document.documentElement.style.overflow = "hidden";
-            document.body.style.height = "100vh"; // precise control
-            document.documentElement.style.height = "100vh";
             window.scrollTo(0, 0);
         } else {
             // Re-enable scrolling
             document.body.style.overflow = "";
             document.documentElement.style.overflow = "";
-            document.body.style.height = "";
-            document.documentElement.style.height = "";
         }
 
         // Cleanup to ensure scroll is restored
         return () => {
             document.body.style.overflow = "";
             document.documentElement.style.overflow = "";
-            document.body.style.height = "";
-            document.documentElement.style.height = "";
         };
     }, [showOrbit]);
 
     const CenteredOrbit = () => {
         // Dynamic values based on screen size
         const radius = isMobile ? -70 : -120; // Smaller orbit radius on mobile
-        const stackSpacing = isMobile ? 45 : 60; // Tighter stacking on mobile
 
         return (
             <motion.div
@@ -293,15 +286,15 @@ export default function App() {
                     <motion.div
                         className="absolute"
                         initial={{ opacity: 0, rotate: 0 }}
-                        animate={{ opacity: 1, rotate: [0, 0, 0, 360] }}
+                        animate={{ opacity: [0, 1, 1, 0], rotate: [0, 0, 0, 360] }}
                         transition={{
                             rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
-                            opacity: { duration: 0.2 } // Fade in quickly, don't take 2s
+                            opacity: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }
                         }}
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, radius, radius, stackSpacing] }} // Ends at bottom (+spacing)
+                            animate={{ y: [0, radius, radius, 0] }} // Ends at center
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
@@ -320,15 +313,15 @@ export default function App() {
                     <motion.div
                         className="absolute"
                         initial={{ rotate: 120, opacity: 0 }}
-                        animate={{ rotate: [120, 120, 120, 360], opacity: 1 }} // Aligns to vertical
+                        animate={{ rotate: [120, 120, 120, 360], opacity: [0, 1, 1, 0] }} // Aligns to vertical
                         transition={{
                             rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
-                            opacity: { duration: 0.2 }
+                            opacity: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }
                         }}
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, radius, radius, -stackSpacing] }} // Ends at top (-spacing)
+                            animate={{ y: [0, radius, radius, 0] }} // Ends at center
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
@@ -347,15 +340,15 @@ export default function App() {
                     <motion.div
                         className="absolute"
                         initial={{ rotate: 240, opacity: 0 }}
-                        animate={{ rotate: [240, 240, 240, 360], opacity: 1 }} // Aligns to vertical
+                        animate={{ rotate: [240, 240, 240, 360], opacity: [0, 1, 1, 0] }} // Aligns to vertical
                         transition={{
                             rotate: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" },
-                            opacity: { duration: 0.2 }
+                            opacity: { duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }
                         }}
                     >
                         <motion.div
                             initial={{ y: 0 }}
-                            animate={{ y: [0, radius, radius, 0] }} // Ends in middle (0)
+                            animate={{ y: [0, radius, radius, 0] }} // Ends in center
                             transition={{ duration: 2, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
                         >
                             <motion.div
@@ -375,7 +368,7 @@ export default function App() {
     };
 
     return (
-        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black overflow-x-hidden">
+        <div className="relative w-full min-h-screen bg-[#e0e0e0] selection:bg-[#F0FF80] selection:text-black">
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'); .font-bebas { font-family: 'Bebas Neue', sans-serif; }`}</style>
 
             {/* CenteredOrbit moved inside layout below */}
