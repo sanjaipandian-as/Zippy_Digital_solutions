@@ -8,7 +8,7 @@ import Team from './Team';
 const ArrowOctagonIcon = () => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block w-[0.85em] h-[0.85em] mx-[0.2em] lg:mx-[0.1em] align-baseline -mb-[0.05em]">
         <path fillRule="evenodd" clipRule="evenodd" d="M7.5 2L2 7.5V16.5L7.5 22H16.5L22 16.5V7.5L16.5 2H7.5Z" fill="black" />
-        <path d="M7 17L17 7M17 7H10M17 7V14" stroke="white" strokeWidth="2.5" strokeLinecap="square" />
+        <path d="M7 17L17 7M17 7H10M17 7V14" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
