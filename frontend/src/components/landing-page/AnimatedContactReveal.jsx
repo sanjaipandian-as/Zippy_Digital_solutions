@@ -62,7 +62,7 @@ export default function AnimatedContactReveal() {
                     layout: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
                 }}
                 className={`
-                    bg-[#F0FF80] overflow-hidden flex flex-col items-center justify-center pointer-events-auto
+                    bg-[#FFFF00] overflow-hidden flex flex-col items-center justify-center pointer-events-auto
                     ${status === "button" ? "w-[88vw] max-w-sm h-16 md:w-80 md:h-20 rounded-[1.5rem] md:rounded-[2rem] cursor-pointer" : ""}
                     ${status === "pillar" ? "w-80 h-screen rounded-none" : ""}
                     ${status === "modal" ? "w-full h-screen rounded-none" : ""}
@@ -82,7 +82,7 @@ export default function AnimatedContactReveal() {
                         >
                             <span className="text-lg md:text-2xl font-black uppercase tracking-tighter">Work with us</span>
                             <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                                <ArrowUpRight className="w-5 h-5 text-[#F0FF80]" strokeWidth={3} />
+                                <ArrowUpRight className="w-5 h-5 text-[#FFFF00]" strokeWidth={3} />
                             </div>
                         </motion.div>
                     )}

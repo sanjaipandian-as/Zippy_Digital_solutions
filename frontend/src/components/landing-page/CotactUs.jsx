@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { InlineWidget } from "react-calendly";
 
 export default function ContactUs({ isOpen, onClose }) {
     const [view, setView] = useState("selection"); // 'selection' or 'form'
@@ -22,11 +23,35 @@ export default function ContactUs({ isOpen, onClose }) {
         }
     }, [isOpen]);
 
-    const handleSubmit = (e) => {
+    const [status, setStatus] = useState("idle"); // idle, loading, success, error
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
-        // Add actual submission logic here
-        onClose();
+        setStatus("loading");
+
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                setStatus("success");
+                setFormData({ email: "", company: "", interest: "", message: "" });
+                setTimeout(() => {
+                    onClose();
+                    setStatus("idle");
+                }, 2000);
+            } else {
+                setStatus("error");
+            }
+        } catch (error) {
+            console.error("Error sending email:", error);
+            setStatus("error");
+        }
     };
 
     if (!isOpen) return null;
@@ -40,12 +65,12 @@ export default function ContactUs({ isOpen, onClose }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="relative bg-black text-white w-full max-w-lg md:max-w-2xl p-6 md:p-12 rounded-none md:rounded-[40px] shadow-2xl mx-0 md:mx-4 flex flex-col h-full md:h-auto md:min-h-[600px] overflow-y-auto md:overflow-hidden"
+                className="relative bg-black text-white w-full max-w-lg md:max-w-3xl p-6 md:p-8 rounded-none md:rounded-[40px] shadow-2xl mx-0 md:mx-4 flex flex-col h-[90vh] md:h-auto md:max-h-[90vh] overflow-y-auto"
             >
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-8 right-8 text-white/80 hover:text-[#EAFE7C] transition-colors z-20"
+                    className="absolute top-8 right-8 text-white/80 hover:text-[#FFFF00] transition-colors z-20"
                 >
                     <X size={32} strokeWidth={3} />
                 </button>
@@ -63,16 +88,55 @@ export default function ContactUs({ isOpen, onClose }) {
                             <h2 className="text-4xl md:text-5xl font-black mb-12 uppercase tracking-tight">Let's Work Together</h2>
 
                             <div className="w-full space-y-4 max-w-md">
-                                <button className="w-full py-5 bg-[#EAFE7C] text-black font-black text-xl rounded-2xl hover:bg-[#d9ed60] transition-transform hover:scale-[1.02] uppercase leading-none">
+                                <button
+                                    onClick={() => setView("calendly")}
+                                    className="w-full py-5 bg-[#FFFF00] text-black font-black text-xl rounded-2xl hover:bg-[#E6E600] transition-transform hover:scale-[1.02] uppercase leading-none"
+                                >
                                     Schedule a Meeting
                                 </button>
 
                                 <button
                                     onClick={() => setView("form")}
-                                    className="w-full py-5 border-2 border-[#EAFE7C] text-[#EAFE7C] font-black text-xl rounded-2xl hover:bg-[#EAFE7C] hover:text-black transition-all uppercase leading-none"
+                                    className="w-full py-5 border-2 border-[#FFFF00] text-[#FFFF00] font-black text-xl rounded-2xl hover:bg-[#FFFF00] hover:text-black transition-all uppercase leading-none"
                                 >
                                     Send us a Message
                                 </button>
+                            </div>
+                        </motion.div>
+                    ) : view === "calendly" ? (
+                        <motion.div
+                            key="calendly"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            transition={{ duration: 0.3 }}
+                            className="flex flex-col flex-1 h-full min-h-[700px]"
+                        >
+                            <div className="flex items-center justify-between mb-4 shrink-0">
+                                <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Schedule Meeting</h2>
+                                <button
+                                    onClick={() => setView("selection")}
+                                    className="text-sm font-bold text-gray-400 hover:text-white uppercase tracking-wider"
+                                >
+                                    Back
+                                </button>
+                            </div>
+
+                            <div className="flex-1 w-full h-full rounded-xl bg-white/5 border border-white/10">
+                                <InlineWidget
+                                    url="https://calendly.com/mkvr2006"
+                                    styles={{
+                                        height: '700px',
+                                        minWidth: '320px'
+                                    }}
+                                    pageSettings={{
+                                        backgroundColor: 'ffffff',
+                                        hideEventTypeDetails: false,
+                                        hideLandingPageDetails: false,
+                                        primaryColor: 'ffed00',
+                                        textColor: '000000'
+                                    }}
+                                />
                             </div>
                         </motion.div>
                     ) : (
@@ -95,7 +159,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                         <input
                                             type="email"
                                             placeholder="Enter your email"
-                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#EAFE7C] transition-colors"
+                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#FFFF00] transition-colors"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         />
@@ -105,7 +169,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                         <input
                                             type="text"
                                             placeholder="Company name"
-                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#EAFE7C] transition-colors"
+                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#FFFF00] transition-colors"
                                             value={formData.company}
                                             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                                         />
@@ -116,7 +180,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Interest</label>
                                     <div className="relative">
                                         <select
-                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-gray-300 appearance-none focus:outline-none focus:border-[#EAFE7C] transition-colors"
+                                            className="w-full bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-gray-300 appearance-none focus:outline-none focus:border-[#FFFF00] transition-colors"
                                             value={formData.interest}
                                             onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                                         >
@@ -134,7 +198,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Project Details</label>
                                     <textarea
                                         placeholder="Tell us about your project..."
-                                        className="w-full flex-1 bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white resize-none focus:outline-none focus:border-[#EAFE7C] transition-colors min-h-[150px]"
+                                        className="w-full flex-1 bg-[#111] border border-[#333] rounded-xl px-5 py-4 text-white resize-none focus:outline-none focus:border-[#FFFF00] transition-colors min-h-[150px]"
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                     />
@@ -149,17 +213,17 @@ export default function ContactUs({ isOpen, onClose }) {
                                         Back
                                     </button>
                                     <button
-                                        type="submit"
-                                        className="flex-1 py-4 bg-[#EAFE7C] text-black rounded-xl font-black text-lg hover:bg-[#d9ed60] transition-colors uppercase tracking-tight shadow-[0_0_20px_rgba(234,254,124,0.1)]"
+                                        disabled={status === "loading"}
+                                        className="flex-1 py-4 bg-[#FFFF00] text-black rounded-xl font-black text-lg hover:bg-[#E6E600] transition-colors uppercase tracking-tight shadow-[0_0_20px_rgba(255,255,0,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        Send Message
+                                        {status === "loading" ? "Sending..." : status === "success" ? "Sent!" : status === "error" ? "Failed. Try Again" : "Send Message"}
                                     </button>
                                 </div>
                             </form>
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </motion.div>
-        </div>
+            </motion.div >
+        </div >
     );
 }
