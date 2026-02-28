@@ -632,9 +632,9 @@ export default function WhyChooseUs() {
                     >
                         <div className="flex items-center gap-3">
                             <span className="w-8 h-[1.5px] bg-black inline-block" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.35em] text-black/50">Zippy Digital Solutions</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.35em] text-black/50">Zippy Digital Solutions</span>
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.35em] text-black/30">10 Reasons</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.35em] text-black/30">10 Reasons</span>
                     </motion.div>
 
                     {/* Centre: main editorial split */}
