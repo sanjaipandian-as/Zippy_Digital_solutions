@@ -661,7 +661,7 @@ export default function WhyChooseUs() {
                                         initial={{ y: "100%", opacity: 0 }}
                                         animate={{ y: "0%", opacity: 1 }}
                                         transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                        className="block text-[17vw] md:text-[11vw] text-[#ffe01b]"
+                                        className="block text-[17vw] md:text-[11vw] text-[#ffe01b] font-bebas"
                                         style={{ WebkitTextStroke: "2px #000" }}
                                     >
                                         Choose
