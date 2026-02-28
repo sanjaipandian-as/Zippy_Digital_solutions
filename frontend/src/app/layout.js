@@ -21,7 +21,7 @@ export const metadata = {
   title: "Zippy Digital Solutions",
   description: "Zippy Digital Solutions - Transforming ideas into exceptional digital experiences through custom web, app, and AI solutions.",
   icons: {
-    icon: "/zippybg.ico",
+    icon: "/zippywhite.ico",
   },
 };
 
