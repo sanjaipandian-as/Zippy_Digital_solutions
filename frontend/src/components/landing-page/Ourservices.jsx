@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 
 const HexArrowIcon = ({ color, arrowColor }) => (
     <div className="relative w-10 h-10 flex items-center justify-center">
@@ -165,10 +165,22 @@ const ServiceAccordion = () => {
     const containerRef = useRef(null);
 
     // Scroll-based animation
-    const { scrollY } = useScroll();
-    const yPosition = useTransform(scrollY, [0, 400], [200, 0]);
-    const opacity = useTransform(scrollY, [0, 200, 400], [0, 0.5, 1]);
-    const scale = useTransform(scrollY, [0, 400], [0.95, 1]);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "start start"]
+    });
+
+    // Smoothed scroll progress for buttery movement
+    const smoothScroll = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
+    // Fluid scroll-driven values
+    const yPosition = useTransform(smoothScroll, [0, 1], [120, 0]);
+    const opacity = useTransform(smoothScroll, [0, 0.4, 0.8], [0, 1, 1]);
+    const scale = useTransform(smoothScroll, [0, 1], [0.98, 1]);
 
     React.useEffect(() => {
         const checkLayout = () => setIsDesktop(window.innerWidth >= 1024);
@@ -181,10 +193,10 @@ const ServiceAccordion = () => {
         if (!isDesktop) return {};
         if (!activeId) return { gridTemplateColumns: "1fr 1fr 1fr 1fr", gridTemplateRows: "1fr 1fr 1fr 1fr 1fr" };
         const activeItem = services.find(s => s.id === activeId);
-        const cols = [0.7, 0.7, 0.7, 0.7];
-        const rows = [0.7, 0.7, 0.7, 0.7, 0.7];
-        cols[activeItem.colIndex] = 1.9;
-        rows[activeItem.rowIndex] = 1.4;
+        const cols = [1, 1, 1, 1];
+        const rows = [0.9, 0.9, 0.9, 0.9, 0.9];
+        cols[activeItem.colIndex] = 1.6;
+        rows[activeItem.rowIndex] = 2.5;
         return {
             gridTemplateColumns: cols.map(c => `${c}fr`).join(" "),
             gridTemplateRows: rows.map(r => `${r}fr`).join(" ")
@@ -192,83 +204,112 @@ const ServiceAccordion = () => {
     };
 
     return (
-        <motion.div
+        <section
             ref={containerRef}
             id="services"
-            className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-center pt-20 relative z-40 -mt-[200px] overflow-hidden"
-            style={{ y: yPosition, opacity }}
+            className="w-full min-h-screen bg-white p-4 sm:p-6 flex flex-col items-center justify-start pt-6 md:pt-10 relative z-10 overflow-hidden"
         >
-            <div className="w-full max-w-[1600px] mb-8 lg:mb-10 px-2 self-center">
-                <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-gray-400 mb-2">
-                        WHAT WE DO
-                    </span>
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-black tracking-tight leading-none">
-                        OUR SERVICES
-                    </h3>
-                </motion.div>
-            </div>
-            <div
-                className="w-full max-w-[1600px] flex flex-col gap-4 lg:gap-3 lg:grid lg:h-[105vh] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                style={getGridStyles()}
-                onMouseLeave={() => setActiveId(null)}
+            <motion.div
+                className="w-full flex flex-col items-center"
+                style={{
+                    y: yPosition,
+                    opacity,
+                    scale
+                }}
             >
-                {services.map((service) => {
-                    const isActive = activeId === service.id;
+                <div className="w-full max-w-[1600px] mb-2 lg:mb-4 px-2 self-center">
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        <span className="block text-xs sm:text-sm lg:text-base font-bold tracking-[0.4em] lg:tracking-[0.5em] uppercase text-gray-400 mb-2">
+                            WHAT WE DO
+                        </span>
+                        <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bebas font-black uppercase text-black tracking-tight leading-none flex overflow-hidden">
+                            {"OUR SERVICES".split("").map((char, i) => (
+                                <motion.span
+                                    key={i}
+                                    initial={{ y: "100%", opacity: 0 }}
+                                    whileInView={{ y: 0, opacity: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: i * 0.04,
+                                        ease: [0.33, 1, 0.68, 1]
+                                    }}
+                                    className={char === " " ? "mr-4" : ""}
+                                >
+                                    {char}
+                                </motion.span>
+                            ))}
+                        </h3>
+                    </motion.div>
+                </div>
+                <div
+                    className="w-full max-w-[1600px] flex flex-col gap-3 lg:grid lg:h-[105vh] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={getGridStyles()}
+                    onMouseLeave={() => setActiveId(null)}
+                >
+                    {services.map((service) => {
+                        const isActive = activeId === service.id;
 
-                    return (
-                        <motion.div
-                            key={service.id}
-                            layout
-                            onMouseEnter={() => setActiveId(service.id)}
-                            onViewportEnter={() => !isDesktop && setActiveId(service.id)}
-                            viewport={{ margin: "-20% 0px -20% 0px", amount: "some" }}
-                            className={`relative flex flex-col justify-between cursor-pointer overflow-hidden rounded-2xl shadow-sm border border-black/5 ${service.bgColor} ${service.textColor} ${service.gridClass} ${isActive ? 'z-20 shadow-xl' : 'z-10'} transition-all duration-500 p-6 lg:p-8 min-h-[250px] lg:min-h-0`}
-                        >
-                            <div className="relative z-10 flex flex-col h-full justify-between">
-                                <div className="flex justify-between items-start">
-                                    <motion.div layout="position">
-                                        <HexArrowIcon
-                                            color={service.textColor === 'text-white' ? 'white' : 'black'}
-                                            arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#ffe01b' : null}
-                                        />
-                                    </motion.div>
-                                    <motion.span layout="position" className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">
-                                        {service.category}
-                                    </motion.span>
-                                </div>
+                        return (
+                            <motion.div
+                                key={service.id}
+                                layout
+                                onMouseEnter={() => isDesktop && setActiveId(service.id)}
+                                whileInView={!isDesktop ? { opacity: 1 } : {}}
+                                onViewportEnter={() => !isDesktop && setActiveId(service.id)}
+                                viewport={{
+                                    once: false,
+                                    amount: !isDesktop ? 0.1 : 0.6,
+                                    margin: !isDesktop ? "0px" : "-10% 0px -10% 0px"
+                                }}
+                                className={`relative flex flex-col justify-between cursor-pointer overflow-hidden rounded-2xl border border-black/5 ${service.bgColor} ${service.textColor} ${service.gridClass} ${isActive && isDesktop ? 'z-20' : isActive && !isDesktop ? 'z-20 scale-[1.02]' : 'z-10 scale-100'} transition-all duration-500 p-5 lg:p-6 min-h-[300px] lg:min-h-0`}
+                            >
+                                <div className="relative z-10 flex flex-col h-full justify-between">
+                                    <div className="flex justify-between items-start">
+                                        <motion.div layout="position">
+                                            <HexArrowIcon
+                                                color={service.textColor === 'text-white' ? 'white' : 'black'}
+                                                arrowColor={(service.id === 4 || service.id === 9) && isActive ? '#ffe01b' : null}
+                                            />
+                                        </motion.div>
+                                        <motion.span layout="position" className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">
+                                            {service.category}
+                                        </motion.span>
+                                    </div>
 
-                                <div className="mt-4 flex-grow flex flex-col justify-end">
-                                    <AnimatePresence mode="wait">
-                                        {isActive ? (
-                                            <motion.div key="active" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                                                <h2 className="text-2xl lg:text-3xl font-black uppercase leading-[0.9] tracking-tighter mb-4">{service.title}</h2>
-                                                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                                    {service.subItems.map((item, i) => (
-                                                        <span key={i} className="text-[10px] lg:text-[11px] font-bold uppercase border-l-2 border-current pl-2 py-0.5 opacity-70 leading-tight">
-                                                            {item}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        ) : (
-                                            <motion.div key="inactive" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                                <h3 className="text-xl lg:text-2xl font-black uppercase leading-none tracking-tight">{service.title}</h3>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    <div className={`mt-4 flex-grow flex flex-col ${isActive || !isDesktop ? 'justify-start md:justify-center' : 'justify-end'}`}>
+                                        <AnimatePresence mode="wait">
+                                            {(isActive || !isDesktop) ? (
+                                                <motion.div key="active" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                                                    <h2 className="text-xl lg:text-3xl font-black uppercase leading-[0.9] tracking-tighter mb-4">{service.title}</h2>
+                                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                                        {service.subItems.map((item, i) => (
+                                                            <span key={i} className="text-[9px] lg:text-[10px] font-bold uppercase border-l-2 border-current pl-2 py-0.5 opacity-80 leading-tight">
+                                                                {item}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div key="inactive" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col">
+                                                    <h3 className="text-xs lg:text-base font-black uppercase leading-tight tracking-tight mb-1 truncate">{service.title}</h3>
+                                                    <p className="text-[8px] lg:text-[9px] opacity-60 font-bold uppercase tracking-wider">{service.subItems.length} SERVICES</p>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    );
-                })}
-            </div>
-        </motion.div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            </motion.div>
+        </section>
     );
 };
 

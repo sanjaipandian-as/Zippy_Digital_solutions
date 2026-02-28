@@ -171,7 +171,87 @@ const Team = () => {
                 </div>
 
                 <div className="relative z-10 flex flex-col md:flex-row h-full w-full">
-                    <div className="w-full md:w-5/12 flex flex-col justify-between h-auto md:h-full p-6 md:p-10 lg:p-10 relative z-20">
+                    {/* Member Detail Card and Photo Section (Top on mobile, Right on desktop) */}
+                    <div className="w-full md:w-7/12 relative h-[700px] md:h-full mt-4 md:mt-0 order-1 md:order-2">
+                        <motion.div
+                            className="absolute inset-0 bg-black z-0 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0%_100%)]"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-[#0a0a0a] to-gray-800/80"></div>
+                            <div
+                                className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay"
+                                style={{
+                                    backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
+                                    backgroundSize: '20px 20px'
+                                }}
+                            ></div>
+                        </motion.div>
+
+                        <div className="relative w-full h-full flex flex-col justify-end">
+                            <div className="absolute top-4 left-4 right-4 md:top-8 md:right-12 md:left-auto z-30 w-auto md:w-full md:max-w-[420px] pointer-events-auto">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeMember.id}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        variants={{
+                                            hidden: { opacity: 0, x: 50 },
+                                            visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.05, duration: 0.5 } },
+                                            exit: { opacity: 0, x: 50 }
+                                        }}
+                                        className="bg-white/10 backdrop-blur-md p-6 md:p-8 pb-8 md:pb-24 rounded-3xl shadow-2xl border border-white/20 text-right"
+                                    >
+                                        <div className="flex flex-wrap gap-2 justify-end mb-4">
+                                            {activeMember.skills.map((skill, idx) => (
+                                                <motion.span
+                                                    key={idx}
+                                                    variants={textVariants}
+                                                    className="px-3 py-1 bg-white/20 text-white rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
+                                                >
+                                                    {skill}
+                                                </motion.span>
+                                            ))}
+                                        </div>
+
+                                        <motion.h2 variants={textVariants} className="text-3xl font-bold text-white mb-1 leading-tight tracking-tight">
+                                            {activeMember.name}
+                                        </motion.h2>
+                                        <motion.p variants={textVariants} className="text-white font-bold text-xs tracking-widest uppercase mb-4">
+                                            {activeMember.role} • {activeMember.region}
+                                        </motion.p>
+                                        <motion.p variants={textVariants} className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">
+                                            {activeMember.bio}
+                                        </motion.p>
+
+                                        <motion.div variants={textVariants} className="flex justify-end gap-4 pt-4 border-t border-white/10">
+                                            <Linkedin className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
+                                            <Twitter className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
+                                            <Dribbble className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
+                                        </motion.div>
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+
+                            <div className="absolute bottom-0 right-0 h-[75%] w-full z-20 pointer-events-none flex items-end justify-end">
+                                <AnimatePresence initial={false} custom={direction}>
+                                    <motion.img
+                                        key={activeMember.id}
+                                        custom={direction}
+                                        variants={imageVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        src={activeMember.image}
+                                        alt={activeMember.name}
+                                        className="h-[55%] md:h-full w-auto object-contain object-bottom drop-shadow-2xl md:mr-[350px]"
+                                    />
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Title and Thumbnails Section (Bottom on mobile, Left on desktop) */}
+                    <div className="w-full md:w-5/12 flex flex-col justify-between h-auto md:h-full p-6 md:p-10 lg:p-10 relative z-20 order-2 md:order-1">
                         <div className="space-y-8 mt-4 relative z-30">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -256,86 +336,6 @@ const Team = () => {
                                 </motion.button>
 
                                 <div className="h-[1px] bg-slate-200 flex-grow ml-4 mr-8 hidden md:block"></div>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full md:w-7/12 relative h-[700px] md:h-full mt-4 md:mt-0">
-                        <motion.div
-                            className="absolute inset-0 bg-black z-0 [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)] md:[clip-path:polygon(15%_0,100%_0,100%_100%,0%_100%)]"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-[#0a0a0a] to-gray-800/80"></div>
-                            <div
-                                className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay"
-                                style={{
-                                    backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
-                                    backgroundSize: '20px 20px'
-                                }}
-                            ></div>
-                        </motion.div>
-
-                        <div className="relative w-full h-full flex flex-col justify-end">
-                            <div className="absolute top-4 left-4 right-4 md:top-8 md:right-12 md:left-auto z-30 w-auto md:w-full md:max-w-[420px] pointer-events-auto">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeMember.id}
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="exit"
-                                        variants={{
-                                            hidden: { opacity: 0, x: 50 },
-                                            visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.05, duration: 0.5 } },
-                                            exit: { opacity: 0, x: 50 }
-                                        }}
-                                        className="bg-white/10 backdrop-blur-md p-6 md:p-8 pb-8 md:pb-24 rounded-3xl shadow-2xl border border-white/20 text-right"
-                                    >
-                                        <div className="flex flex-wrap gap-2 justify-end mb-4">
-                                            {activeMember.skills.map((skill, idx) => (
-                                                <motion.span
-                                                    key={idx}
-                                                    variants={textVariants}
-                                                    className="px-3 py-1 bg-white/20 text-white rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
-                                                >
-                                                    {skill}
-                                                </motion.span>
-                                            ))}
-                                        </div>
-
-                                        <motion.h2 variants={textVariants} className="text-3xl font-bold text-white mb-1 leading-tight tracking-tight">
-                                            {activeMember.name}
-                                        </motion.h2>
-                                        <motion.p variants={textVariants} className="text-white font-bold text-xs tracking-widest uppercase mb-4">
-                                            {activeMember.role} • {activeMember.region}
-                                        </motion.p>
-                                        <motion.p variants={textVariants} className="text-gray-300 text-sm leading-relaxed mb-6 font-medium">
-                                            {activeMember.bio}
-                                        </motion.p>
-
-                                        <motion.div variants={textVariants} className="flex justify-end gap-4 pt-4 border-t border-white/10">
-                                            <Linkedin className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-                                            <Twitter className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-                                            <Dribbble className="w-5 h-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
-                                        </motion.div>
-                                    </motion.div>
-                                </AnimatePresence>
-                            </div>
-
-                            <div className="absolute bottom-0 right-0 h-[75%] w-full z-20 pointer-events-none flex items-end justify-end">
-                                <AnimatePresence initial={false} custom={direction}>
-                                    <motion.img
-                                        key={activeMember.id}
-                                        custom={direction}
-                                        variants={imageVariants}
-                                        initial="enter"
-                                        animate="center"
-                                        exit="exit"
-                                        src={activeMember.image}
-                                        alt={activeMember.name}
-                                        className="h-[55%] md:h-full w-auto object-contain object-bottom drop-shadow-2xl md:mr-[350px]"
-                                    />
-                                </AnimatePresence>
                             </div>
                         </div>
                     </div>
