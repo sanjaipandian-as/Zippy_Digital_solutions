@@ -64,5 +64,5 @@ const About = () => {
         </div>
     );
 };
-
+//About page bug and erros fixed. 
 export default About;
