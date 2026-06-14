@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Bebas_Neue } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,6 +17,13 @@ const bebasNeue = Bebas_Neue({
   weight: "400",
 });
 
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+});
+
 export const metadata = {
   title: "Zippy Digital Solutions",
   description: "Zippy Digital Solutions - Transforming ideas into exceptional digital experiences through custom web, app, and AI solutions.",
@@ -29,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${playfairDisplay.variable} antialiased`}
       >
         {children}
       </body>
