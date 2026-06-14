@@ -177,7 +177,7 @@ export default function CaseStudy() {
                         </div>
 
                         {/* Mobile Center Button (Placed ABOVE the cards) */}
-                        <div className="flex md:hidden justify-center mt-5 z-30 relative pointer-events-auto">
+                        <div className="flex md:hidden justify-center mt-5 z-[120] relative pointer-events-auto">
                             <motion.button
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
@@ -213,7 +213,7 @@ export default function CaseStudy() {
                     </div>
 
                     {/* Grid Split */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative mt-16 md:mt-0">
 
                         {/* Left Column - Staggered Challenge Cards (Curved like ) with upright flat cards) */}
                         <div className="md:col-span-6 relative w-full h-[45vh] md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
@@ -234,7 +234,7 @@ export default function CaseStudy() {
                                             scale: isActive ? 1.02 : 0.96,
                                             borderColor: "transparent",
                                             boxShadow: isMobile ? "0 10px 25px rgba(0, 0, 0, 0.4)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
-                                            y: isMobile ? `calc(-50% + ${diff * 10}vh)` : `calc(-50% + ${diff * 18}vh)`,
+                                            y: isMobile ? `calc(-50% + ${diff * 8}vh)` : `calc(-50% + ${diff * 18}vh)`,
                                             x: isMobile ? "-50%" : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
                                             backgroundColor: "#ffffff",
                                             pointerEvents: isActive ? "auto" : "none"
