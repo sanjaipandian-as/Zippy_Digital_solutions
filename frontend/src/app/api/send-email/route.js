@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
     try {
-        const { email, company, interest, message } = await request.json();
+        const { name, email, company, interest, message } = await request.json();
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -13,64 +13,92 @@ export async function POST(request) {
             },
         });
 
-        // 1. Send notification to business owner + Zippy team
-        const mailOptions = {
-            from: `"${email}" <${process.env.EMAIL_USER}>`,
+        const logoUrl = "https://zippydigitalsolutions.in/zippywhite.png";
+
+        // 1. Notification Email for Zippy Team (Professional Inbox View)
+        const notificationMail = {
+            from: `"Zippy Leads" <${process.env.EMAIL_USER}>`,
             to: process.env.EMAIL_USER,
-            cc: 'tech@zippydigitalsolutions.in',
+            cc: ['tech@zippydigitalsolutions.in', 'knock@zippydigitalsolutions.in'],
             replyTo: email,
-            subject: `New Contact Form Submission from ${company || email}`,
-            text: `
-        Name/Email: ${email}
-        Company: ${company}
-        Interest: ${interest}
-        Message: ${message}
-      `,
+            subject: `🔥 New Lead: ${name} (${company || 'Individual'})`,
             html: `
-        <h3>New Contact Form Submission</h3>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Company:</strong> ${company}</p>
-        <p><strong>Interest:</strong> ${interest}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `,
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; background: #0a0a0a; color: #ffffff; padding: 40px; border-radius: 20px;">
+                    <img src="${logoUrl}" alt="Zippy Logo" style="width: 120px; margin-bottom: 30px;" />
+                    <h2 style="font-size: 24px; font-weight: 800; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 25px; color: #ffff00;">New Submission</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 12px 0; color: #888; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; width: 100px;">Name</td>
+                            <td style="padding: 12px 0; font-size: 16px; font-weight: 600;">${name}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px 0; color: #888; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Email</td>
+                            <td style="padding: 12px 0; font-size: 16px; color: #ffff00;">${email}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px 0; color: #888; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Company</td>
+                            <td style="padding: 12px 0; font-size: 16px;">${company || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px 0; color: #888; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Interest</td>
+                            <td style="padding: 12px 0; font-size: 16px; font-weight: 600;">${interest.toUpperCase()}</td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-top: 30px; padding: 25px; background: #111; border-left: 4px solid #ffff00; border-radius: 8px;">
+                        <p style="color: #888; font-size: 11px; text-transform: uppercase; margin: 0 0 10px 0;">Message</p>
+                        <p style="margin: 0; line-height: 1.6; font-size: 15px; color: #eee;">${message}</p>
+                    </div>
+
+                    <p style="margin-top: 40px; color: #444; font-size: 11px; text-align: center;">Sent from Zippy Digital Solutions Portal</p>
+                </div>
+            `
         };
 
-        // 2. Send confirmation copy to the visitor
+        // 2. Professional Confirmation Email for the Client
         const confirmationMail = {
             from: `"Zippy Digital Solutions" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: `We received your message — Zippy Digital Solutions`,
+            subject: `We've received your inquiry, ${name.split(' ')[0]}!`,
             html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background: #f9f9f9; border-radius: 12px;">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <h2 style="color: #000; margin: 0;">Zippy Digital Solutions</h2>
-                <p style="color: #888; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">Thank you for reaching out!</p>
-            </div>
-            <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid #eee;">
-                <p style="color: #333; font-size: 15px; line-height: 1.6;">
-                    Hi${company ? ` <strong>${company}</strong>` : ''},
-                </p>
-                <p style="color: #333; font-size: 15px; line-height: 1.6;">
-                    We've received your message and our team will get back to you within <strong>24 hours</strong>.
-                </p>
-                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-                <p style="color: #888; font-size: 13px; margin-bottom: 4px;"><strong>Your submission details:</strong></p>
-                <p style="color: #555; font-size: 14px; line-height: 1.6;">
-                    <strong>Interest:</strong> ${interest}<br/>
-                    <strong>Message:</strong> ${message}
-                </p>
-            </div>
-            <p style="text-align: center; color: #aaa; font-size: 11px; margin-top: 20px;">
-                © ${new Date().getFullYear()} Zippy Digital Solutions. All rights reserved.
-            </p>
-        </div>
-      `,
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; color: #000000; padding: 0; border-radius: 16px; overflow: hidden; border: 1px solid #ebebeb;">
+                    <div style="background: #000; padding: 40px; text-align: center;">
+                        <img src="${logoUrl}" alt="Zippy Logo" style="width: 140px;" />
+                    </div>
+                    
+                    <div style="padding: 40px;">
+                        <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 20px 0; letter-spacing: -0.5px;">Hi ${name.split(' ')[0]},</h1>
+                        <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 25px;">
+                            Thanks for reaching out to <strong>Zippy Digital Solutions</strong>. We've received your project details regarding <strong>${interest}</strong> and our team is already reviewing them.
+                        </p>
+                        
+                        <div style="background: #f7f7f7; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+                            <p style="margin: 0 0 15px 0; font-size: 12px; font-weight: 800; text-transform: uppercase; color: #888; letter-spacing: 1px;">Details Shared:</p>
+                            <p style="margin: 0 0 8px 0; font-size: 14px;"><strong>Interest:</strong> ${interest}</p>
+                            <p style="margin: 0; font-size: 14px;"><strong>Company:</strong> ${company || 'N/A'}</p>
+                        </div>
+
+                        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+                            Expect a formal response from one of our specialists within the next <strong>24 business hours</strong> to discuss the next steps.
+                        </p>
+
+                        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #eee;">
+                            <p style="margin: 0; font-size: 14px; font-weight: 700;">Best regards,</p>
+                            <p style="margin: 4px 0 0 0; font-size: 14px; color: #666;">The Zippy Creative Team</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #fcfcfc; padding: 20px; text-align: center; font-size: 11px; color: #aaa;">
+                        © ${new Date().getFullYear()} Zippy Digital Solutions. Crafted for Excellence.
+                    </div>
+                </div>
+            `,
         };
 
         // Send both emails
         await Promise.all([
-            transporter.sendMail(mailOptions),
+            transporter.sendMail(notificationMail),
             transporter.sendMail(confirmationMail),
         ]);
 
