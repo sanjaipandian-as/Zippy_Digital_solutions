@@ -175,6 +175,41 @@ export default function CaseStudy() {
                                 BUT NOW ZIPPY DIGITAL SOLUTIONS IS HERE
                             </p>
                         </div>
+
+                        {/* Mobile Center Button (Placed ABOVE the cards) */}
+                        <div className="flex md:hidden justify-center mt-5 z-30 relative pointer-events-auto">
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="group relative focus:outline-none"
+                            >
+                                <div
+                                    className="bg-zinc-900 p-[1px] transition-colors duration-300 group-hover:bg-zinc-700"
+                                    style={{
+                                        clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)"
+                                    }}
+                                >
+                                    <div
+                                        className="bg-[#ffe01b] pl-8 pr-4 py-3.5 flex items-center justify-between gap-6"
+                                        style={{
+                                            clipPath: "polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px)"
+                                        }}
+                                    >
+                                        <span className="text-zinc-950 font-sans font-bold tracking-[0.12em] text-xs uppercase">
+                                            EXPLORE FULL CASE STUDY
+                                        </span>
+                                        <div
+                                            className="w-8 h-8 bg-zinc-950 flex items-center justify-center text-white transition-transform duration-300 shrink-0"
+                                            style={{
+                                                clipPath: "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)"
+                                            }}
+                                        >
+                                            <ArrowUpRight className="w-4 h-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.button>
+                        </div>
                     </div>
 
                     {/* Grid Split */}
@@ -431,40 +466,8 @@ export default function CaseStudy() {
 
                     </div>
 
-                    {/* Mobile Center Button */}
-                    <div className="flex md:hidden justify-center mt-10 z-30 relative pointer-events-auto">
-                        <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="group relative focus:outline-none"
-                        >
-                            <div
-                                className="bg-zinc-900 p-[1px] transition-colors duration-300 group-hover:bg-zinc-700"
-                                style={{
-                                    clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)"
-                                }}
-                            >
-                                <div
-                                    className="bg-[#ffe01b] pl-8 pr-4 py-3.5 flex items-center justify-between gap-6"
-                                    style={{
-                                        clipPath: "polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px)"
-                                    }}
-                                >
-                                    <span className="text-zinc-950 font-sans font-bold tracking-[0.12em] text-xs uppercase">
-                                        EXPLORE FULL CASE STUDY
-                                    </span>
-                                    <div
-                                        className="w-8 h-8 bg-zinc-950 flex items-center justify-center text-white transition-transform duration-300 shrink-0"
-                                        style={{
-                                            clipPath: "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)"
-                                        }}
-                                    >
-                                        <ArrowUpRight className="w-4 h-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-white" />
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.button>
-                    </div>
+                    {/* Space padding */}
+                    <div className="pb-4" />
 
                 </div>
             </div>
