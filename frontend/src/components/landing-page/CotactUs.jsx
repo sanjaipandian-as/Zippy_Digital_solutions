@@ -8,11 +8,13 @@ import { InlineWidget } from "react-calendly";
 export default function ContactUs({ isOpen, onClose }) {
     const [view, setView] = useState("selection"); // 'selection' or 'form'
     const [formData, setFormData] = useState({
+        name: "",
         email: "",
         company: "",
         interest: "",
         message: ""
     });
+    const [isInterestOpen, setIsInterestOpen] = useState(false);
 
     // Reset view when modal opens/closes
     React.useEffect(() => {
@@ -66,6 +68,18 @@ export default function ContactUs({ isOpen, onClose }) {
 
     return (
         <div className="w-full h-full flex items-center justify-center font-sans pointer-events-auto relative z-[10002]">
+            <style jsx="true">{`
+                input:-webkit-autofill,
+                input:-webkit-autofill:hover, 
+                input:-webkit-autofill:focus,
+                textarea:-webkit-autofill,
+                textarea:-webkit-autofill:hover,
+                textarea:-webkit-autofill:focus {
+                    -webkit-text-fill-color: #ffff00;
+                    -webkit-box-shadow: 0 0 0px 1000px #111 inset;
+                    transition: background-color 5000s ease-in-out 0s;
+                }
+            `}</style>
 
             {/* Main Modal Container */}
             <motion.div
@@ -93,14 +107,14 @@ export default function ContactUs({ isOpen, onClose }) {
                     {view !== "selection" && (
                         <button
                             onClick={() => setView("selection")}
-                            className="text-xs sm:text-sm font-bold text-gray-400 hover:text-white uppercase tracking-wider transition-all flex items-center h-8"
+                            className="text-xs sm:text-sm font-bold text-gray-400 hover:text-white uppercase tracking-wider transition-all flex items-center h-8 cursor-pointer"
                         >
                             Back
                         </button>
                     )}
                     <button
                         onClick={onClose}
-                        className="text-white/80 hover:text-[#FFFF00] transition-all flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-white/10"
+                        className="text-white/80 hover:text-[#FFFF00] transition-all flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-white/10 cursor-pointer"
                     >
                         <X size={20} className="sm:hidden" strokeWidth={2.5} />
                         <X size={24} className="hidden sm:block" strokeWidth={2.5} />
@@ -127,7 +141,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                         onClick={() => setView("calendly")}
                                         whileHover={{ scale: 1.02, backgroundColor: "#E6E600" }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="w-full py-4 sm:py-5 md:py-6 bg-[#FFFF00] text-black font-black text-base sm:text-lg md:text-xl rounded-xl sm:rounded-2xl transition-all shadow-[0_10px_30px_rgba(255,255,0,0.2)] uppercase leading-none"
+                                        className="w-full py-4 sm:py-5 md:py-6 bg-[#FFFF00] text-black font-black text-base sm:text-lg md:text-xl rounded-xl sm:rounded-2xl transition-all shadow-[0_10px_30px_rgba(255,255,0,0.2)] uppercase leading-none cursor-pointer"
                                     >
                                         Schedule a Meeting
                                     </motion.button>
@@ -136,7 +150,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                         onClick={() => setView("form")}
                                         whileHover={{ scale: 1.02, borderColor: "#FFFF00", color: "#FFFF00" }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="w-full py-4 sm:py-5 md:py-6 border-2 border-white/20 text-white font-black text-base sm:text-lg md:text-xl rounded-xl sm:rounded-2xl transition-all uppercase leading-none"
+                                        className="w-full py-4 sm:py-5 md:py-6 border-2 border-white/20 text-white font-black text-base sm:text-lg md:text-xl rounded-xl sm:rounded-2xl transition-all uppercase leading-none cursor-pointer"
                                     >
                                         Send us a Message
                                     </motion.button>
@@ -187,67 +201,119 @@ export default function ContactUs({ isOpen, onClose }) {
                                     <p className="text-gray-500 font-medium text-sm sm:text-base">We'll get back to you within 24 hours.</p>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 flex-1 w-full">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-                                        <div className="flex flex-col space-y-1.5 sm:space-y-2">
+                                <form onSubmit={handleSubmit} className="flex flex-col space-y-3 sm:space-y-4 md:space-y-5 flex-1 w-full">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
+                                        <div className="flex flex-col space-y-1 sm:space-y-1.5">
+                                            <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Enter your name"
+                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 py-2.5 sm:py-3.5 text-sm text-white focus:outline-none focus:border-[#FFFF00] transition-all"
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="flex flex-col space-y-1 sm:space-y-1.5">
                                             <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Email</label>
                                             <input
                                                 type="email"
                                                 placeholder="Enter your email"
-                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 text-sm sm:text-base text-white focus:outline-none focus:border-[#FFFF00] transition-all"
+                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 py-2.5 sm:py-3.5 text-sm text-white focus:outline-none focus:border-[#FFFF00] transition-all"
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                 required
                                             />
                                         </div>
-                                        <div className="flex flex-col space-y-1.5 sm:space-y-2">
+                                        <div className="flex flex-col space-y-1 sm:space-y-1.5">
                                             <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Company</label>
                                             <input
                                                 type="text"
                                                 placeholder="Company name"
-                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 text-sm sm:text-base text-white focus:outline-none focus:border-[#FFFF00] transition-all"
+                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 py-2.5 sm:py-3.5 text-sm text-white focus:outline-none focus:border-[#FFFF00] transition-all"
                                                 value={formData.company}
                                                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                                             />
                                         </div>
-                                    </div>
+                                        <div className="flex flex-col space-y-1 sm:space-y-1.5">
+                                            <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Interest</label>
+                                            <div className="relative">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsInterestOpen(!isInterestOpen)}
+                                                    className={`w-full bg-[#111] border rounded-lg sm:rounded-xl px-4 py-2.5 sm:py-3.5 text-sm text-left flex items-center justify-between transition-all duration-300 cursor-pointer ${isInterestOpen ? 'border-[#FFFF00] ring-1 ring-[#FFFF00]/20' : 'border-[#222] text-gray-400'}`}
+                                                >
+                                                    <span className={formData.interest ? 'text-white font-medium' : 'text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap'}>
+                                                        {formData.interest
+                                                            ? ["Web Development", "Mobile App", "UI/UX Design", "Other"].find(l => l.toLowerCase().includes(formData.interest)) || formData.interest
+                                                            : "What are you interested in?"}
+                                                    </span>
+                                                    <motion.div
+                                                        animate={{ rotate: isInterestOpen ? 180 : 0 }}
+                                                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                    >
+                                                        <ChevronDown className={`w-4 h-4 transition-colors ${isInterestOpen ? 'text-[#FFFF00]' : 'text-gray-500'}`} />
+                                                    </motion.div>
+                                                </button>
 
-                                    <div className="flex flex-col space-y-1.5 sm:space-y-2">
-                                        <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Interest</label>
-                                        <div className="relative group">
-                                            <select
-                                                className="w-full bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 text-sm sm:text-base text-gray-300 appearance-none focus:outline-none focus:border-[#FFFF00] transition-all cursor-pointer"
-                                                value={formData.interest}
-                                                onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                                                required
-                                            >
-                                                <option value="" disabled>What are you interested in?</option>
-                                                <option value="web">Web Development</option>
-                                                <option value="mobile">Mobile App</option>
-                                                <option value="design">UI/UX Design</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                            <ChevronDown className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500 group-focus-within:text-[#FFFF00] pointer-events-none transition-colors" />
+                                                <AnimatePresence>
+                                                    {isInterestOpen && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            animate={{ opacity: 1, y: 5, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                                            className="absolute top-full left-0 w-full bg-[#0a0a0a] border border-[#222] rounded-xl overflow-hidden z-[60] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                                                        >
+                                                            {[
+                                                                { value: "web", label: "Web Development" },
+                                                                { value: "mobile", label: "Mobile App" },
+                                                                { value: "design", label: "UI/UX Design" },
+                                                                { value: "other", label: "Other" }
+                                                            ].map((opt) => (
+                                                                <motion.button
+                                                                    key={opt.value}
+                                                                    type="button"
+                                                                    whileHover={{ backgroundColor: "rgba(255, 255, 0, 0.05)" }}
+                                                                    onClick={() => {
+                                                                        setFormData({ ...formData, interest: opt.value });
+                                                                        setIsInterestOpen(false);
+                                                                    }}
+                                                                    className="w-full text-left px-5 py-3 text-sm text-gray-300 hover:text-[#FFFF00] transition-colors flex items-center justify-between group cursor-pointer"
+                                                                >
+                                                                    <span className="font-medium tracking-wide uppercase text-[10px] sm:text-[11px]">{opt.label}</span>
+                                                                    {formData.interest === opt.value && (
+                                                                        <motion.div
+                                                                            layoutId="active-indicator"
+                                                                            className="w-1.5 h-1.5 rounded-full bg-[#FFFF00]"
+                                                                        />
+                                                                    )}
+                                                                </motion.button>
+                                                            ))}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col space-y-1.5 sm:space-y-2">
+                                    <div className="flex flex-col space-y-1 sm:space-y-1.5">
                                         <label className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Project Details</label>
                                         <textarea
                                             placeholder="Tell us about your project..."
-                                            className="w-full h-24 sm:h-32 md:h-40 bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 text-sm sm:text-base text-white resize-none focus:outline-none focus:border-[#FFFF00] transition-all"
+                                            className="w-full h-20 sm:h-24 md:h-28 bg-[#111] border border-[#222] rounded-lg sm:rounded-xl px-4 py-3 text-sm text-white resize-none focus:outline-none focus:border-[#FFFF00] transition-all"
                                             value={formData.message}
                                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                             required
                                         />
                                     </div>
 
-                                    <div className="pt-3 sm:pt-4 md:pt-6">
+                                    <div className="pt-2 sm:pt-3">
                                         <motion.button
                                             whileHover={{ scale: 1.01, backgroundColor: "#E6E600" }}
                                             whileTap={{ scale: 0.99 }}
                                             disabled={status === "loading"}
-                                            className="w-full py-3.5 sm:py-4 md:py-5 bg-[#FFFF00] text-black rounded-xl sm:rounded-2xl font-black text-base sm:text-lg md:text-xl transition-all uppercase tracking-tight shadow-[0_15px_40px_rgba(255,255,0,0.15)] disabled:opacity-50 disabled:cursor-not-allowed group"
+                                            className="w-full py-3.5 sm:py-4 md:py-5 bg-[#FFFF00] text-black rounded-xl sm:rounded-2xl font-black text-base sm:text-lg md:text-xl transition-all uppercase tracking-tight shadow-[0_15px_40px_rgba(255,255,0,0.15)] disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
                                         >
                                             <div className="flex items-center justify-center gap-2 sm:gap-3">
                                                 {status === "loading" ? (

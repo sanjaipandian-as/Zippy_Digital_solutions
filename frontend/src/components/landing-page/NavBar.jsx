@@ -30,7 +30,8 @@ const NavBar = () => {
     const navLinks = [
         { id: "01", name: "SERVICES", href: "#services" },
         { id: "02", name: "WHY CHOOSE US", href: "#why-choose-us" },
-        { id: "03", name: "TEAM", href: "#team" },
+        { id: "03", name: "CASE STUDIES", href: "#case-studies" },
+        { id: "04", name: "TEAM", href: "#team" },
     ];
 
     const handleNavClick = (e, href) => {
@@ -186,7 +187,7 @@ const NavBar = () => {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div className="flex flex-col gap-1">
                             <span className="text-[10px] font-bold tracking-[0.4em] text-gray-400 uppercase">Contact us</span>
-                            <span className="text-sm font-sans text-white tracking-wider opacity-60">hello@zippydigital.com</span>
+                            <span className="text-sm font-sans text-white tracking-wider opacity-60">knock@zippydigitalsolutions.in</span>
                         </div>
 
                         <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-bold tracking-[0.3em] text-gray-400/60 uppercase">

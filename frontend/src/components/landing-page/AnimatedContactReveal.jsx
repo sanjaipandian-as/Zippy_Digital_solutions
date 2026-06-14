@@ -184,7 +184,8 @@ export default function AnimatedContactReveal() {
                 whileTap={{ scale: 0.95 }}
                 className="bg-[#FFFF00] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-[0_20px_50px_rgba(255,224,27,0.3)] w-[260px] h-[55px] md:w-[320px] md:h-[65px] cursor-pointer"
                 style={{
-                    clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)"
+                    clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)",
+                    willChange: "transform"
                 }}
                 onClick={handleOpenContact}
             >

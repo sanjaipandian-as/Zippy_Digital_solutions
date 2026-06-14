@@ -9,14 +9,7 @@ export default function Footer() {
   // We use inline styles for the animations to ensure precise control over the keyframes
   // without needing an external CSS file, making this a self-contained artifact.
 
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   return (
     <footer id="contact-us" className="relative w-full h-screen md:h-screen bg-black overflow-hidden flex flex-col justify-between items-center font-sans select-none z-[10002] pt-10 md:pt-0 -mt-1">
@@ -33,12 +26,18 @@ export default function Footer() {
           display: flex;
           width: max-content;
           animation: marquee 30s linear infinite;
+          will-change: transform;
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
         
         .animate-marquee-reverse {
           display: flex;
           width: max-content;
           animation: marquee 30s linear infinite reverse;
+          will-change: transform;
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
         
         .mask-linear {
@@ -47,15 +46,15 @@ export default function Footer() {
       `}</style>
 
       {/* Background Decorative Element */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-[0.12] pointer-events-none overflow-hidden flex items-center justify-center">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-[0.12] pointer-events-none overflow-hidden flex items-center justify-center" style={{ transform: 'translate(-50%, -50%) translateZ(0)' }}>
         <h2 className="text-[60vw] font-black text-white leading-none tracking-tighter select-none font-bebas">ZIPPY</h2>
       </div>
 
       <div className="w-full flex-grow flex flex-col justify-center items-center gap-4 md:gap-4 z-10">
         {/* Top Marquee */}
-        <div className="w-full h-10 md:h-16 overflow-hidden border-y border-white/10 rotate-[-1deg] scale-105 bg-zinc-900/50 backdrop-blur-sm flex items-center">
+        <div className="w-full h-10 md:h-16 overflow-hidden border-y border-white/10 rotate-[-1deg] scale-105 bg-zinc-900/50 backdrop-blur-sm flex items-center" style={{ transform: 'rotate(-1deg) scale(1.05) translateZ(0)' }}>
           <div className="animate-marquee">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <span key={i} className="text-2xl md:text-5xl font-bebas text-white/20 mx-4 md:mx-12 whitespace-nowrap">
                 READY TO DISCUSS YOUR NEXT PROJECT <span className="text-[#FFFF00] opacity-100">•</span>
               </span>
@@ -68,6 +67,7 @@ export default function Footer() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             className="space-y-4 md:space-y-4"
           >
             <h2 className="text-5xl md:text-[8.5rem] lg:text-[10rem] font-bebas leading-[0.85] md:leading-[0.8] text-white tracking-tighter">
@@ -86,9 +86,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Marquee */}
-        <div className="w-full h-10 md:h-16 overflow-hidden border-y border-white/10 rotate-[1deg] scale-105 bg-black flex items-center">
+        <div className="w-full h-10 md:h-16 overflow-hidden border-y border-white/10 rotate-[1deg] scale-105 bg-black flex items-center" style={{ transform: 'rotate(1deg) scale(1.05) translateZ(0)' }}>
           <div className="animate-marquee-reverse">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <span key={i} className="text-2xl md:text-5xl font-bebas text-white/20 mx-4 md:mx-12 whitespace-nowrap">
                 TRANSFORMING IDEAS INTO EXPERIENCES <span className="text-[#FFFF00] opacity-100">•</span>
               </span>
@@ -100,10 +100,10 @@ export default function Footer() {
 
 
       {/* Footer Info Bar */}
-      <div className="w-full border-t border-white/5 py-4 px-6 md:px-20 grid grid-cols-1 md:grid-cols-3 gap-6 items-end z-10 backdrop-blur-xl bg-black/80">
+      <div className="w-full border-t border-white/5 py-4 px-6 md:px-20 grid grid-cols-1 md:grid-cols-3 gap-6 items-end z-10 backdrop-blur-md bg-black/90">
         <div className="space-y-2">
           <div className="flex items-center gap-4">
-            <img src="/zippywhite.png" alt="Zippy Logo" className="h-12 md:h-16 w-auto object-contain" />
+            <img src="/zippywhite.png" alt="Zippy Logo" className="h-12 md:h-16 w-auto object-contain" loading="lazy" />
             <div className="flex flex-col">
               <span className="text-white font-bebas text-3xl md:text-5xl leading-none tracking-wide">ZIPPY</span>
               <span className="text-[#FFFF00] font-bold text-[8px] md:text-[10px] tracking-[0.4em] uppercase mt-1">Digital solutions</span>
@@ -119,10 +119,10 @@ export default function Footer() {
             {[
               { name: 'LinkedIn', url: 'https://www.linkedin.com/company/zippydigitalsolutions/' },
               { name: 'Instagram', url: 'https://www.instagram.com/zippydigitalsolutions?igsh=enBzOHp0dG5ocWth' },
-              { name: 'Mail', url: 'mailto:tech@zippydigitalsolutions.in' }
+              { name: 'Mail', url: 'mailto:knock@zippydigitalsolutions.in' }
             ].map((social) => (
               <a
-                key={social.name}
+                key={social.name}  
                 href={social.url}
                 target={social.name !== 'Mail' ? "_blank" : "_self"}
                 rel="noopener noreferrer"

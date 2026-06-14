@@ -4,6 +4,8 @@ import Ourservices from '@/components/landing-page/Ourservices';
 import Industries from '@/components/landing-page/Industries';
 
 import WhyChooseUs from '@/components/landing-page/Whywechooseus';
+import CaseStudy from '@/components/landing-page/CaseStudy';
+// import Portfolio from '@/components/landing-page/Portfolio';
 import Team from '@/components/landing-page/Team';
 import Footer from '@/components/landing-page/Footer';
 
@@ -17,6 +19,8 @@ export default function Home() {
 
       <Team />
       <WhyChooseUs />
+      <CaseStudy />
+      {/* <Portfolio /> */}
       <Footer />
     </div>
   );

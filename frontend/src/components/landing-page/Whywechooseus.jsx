@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import React, { useRef, useCallback, useMemo, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from 'framer-motion';
 
 const features = [
     {
@@ -116,9 +116,9 @@ const features = [
     }
 ];
 
-/* ─── Background Pattern Components ─── */
+/* ─── Background Pattern Components (all memoized) ─── */
 
-const BlueprintPattern = ({ textColor }) => {
+const BlueprintPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
@@ -165,9 +165,9 @@ const BlueprintPattern = ({ textColor }) => {
             <circle cx="840" cy="280" r="10" fill="none" stroke={`rgba(${c},0.2)`} strokeWidth="1" />
         </svg>
     );
-};
+});
 
-const GridPattern = ({ textColor }) => {
+const GridPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -187,9 +187,9 @@ const GridPattern = ({ textColor }) => {
             <line x1="50%" y1="0" x2="50%" y2="100%" stroke={`rgba(${c},0.08)`} strokeWidth="1" />
         </svg>
     );
-};
+});
 
-const DotsPattern = ({ textColor }) => {
+const DotsPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -208,9 +208,9 @@ const DotsPattern = ({ textColor }) => {
             <circle cx="80%" cy="20%" r="80" fill="none" stroke={`rgba(${c},0.1)`} strokeWidth="1" />
         </svg>
     );
-};
+});
 
-const HexagonsPattern = ({ textColor }) => {
+const HexagonsPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     const hex = "M 30,0 L 60,17.3 L 60,51.9 L 30,69.2 L 0,51.9 L 0,17.3 Z";
     return (
@@ -225,9 +225,9 @@ const HexagonsPattern = ({ textColor }) => {
             <circle cx="25%" cy="75%" r="200" fill="none" stroke={`rgba(${c},0.08)`} strokeWidth="60" />
         </svg>
     );
-};
+});
 
-const WavesPattern = ({ textColor }) => {
+const WavesPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -247,9 +247,9 @@ const WavesPattern = ({ textColor }) => {
             <rect width="100%" height="100%" fill="url(#waves-glow)" />
         </svg>
     );
-};
+});
 
-const DiagonalPattern = ({ textColor }) => {
+const DiagonalPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -263,9 +263,9 @@ const DiagonalPattern = ({ textColor }) => {
             <polygon points="100,0 100,40 60,0" fill={`rgba(${c},0.08)`} />
         </svg>
     );
-};
+});
 
-const CirclesPattern = ({ textColor }) => {
+const CirclesPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     return (
         <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -285,9 +285,9 @@ const CirclesPattern = ({ textColor }) => {
             ))}
         </svg>
     );
-};
+});
 
-const CircuitPattern = ({ textColor }) => {
+const CircuitPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     const lines = [
         "M 80 0 L 80 80 L 160 80",
@@ -318,9 +318,9 @@ const CircuitPattern = ({ textColor }) => {
             <rect width="100%" height="100%" fill="url(#circuit-glow)" />
         </svg>
     );
-};
+});
 
-const MeshPattern = ({ textColor }) => {
+const MeshPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     const pts = [
         [100, 120], [250, 60], [420, 150], [600, 80], [750, 180],
@@ -353,9 +353,9 @@ const MeshPattern = ({ textColor }) => {
             </g>
         </svg>
     );
-};
+});
 
-const TopologyPattern = ({ textColor }) => {
+const TopologyPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     const contours = [
         "M 200 400 Q 350 250 500 300 Q 650 350 750 250 Q 850 200 900 350",
@@ -378,9 +378,9 @@ const TopologyPattern = ({ textColor }) => {
             <rect width="100%" height="100%" fill="url(#topo-glow)" />
         </svg>
     );
-};
+});
 
-const StarburstPattern = ({ textColor }) => {
+const StarburstPattern = React.memo(({ textColor }) => {
     const c = textColor === "#FFFFFF" ? "255,255,255" : "0,0,0";
     const spokes = React.useMemo(() => Array.from({ length: 24 }, (_, i) => {
         const angle = (i / 24) * Math.PI * 2;
@@ -403,23 +403,25 @@ const StarburstPattern = ({ textColor }) => {
             </g>
         </svg>
     );
+});
+
+/* ─── Pattern map (static, outside component) ─── */
+const PATTERN_MAP = {
+    grid: GridPattern,
+    dots: DotsPattern,
+    hexagons: HexagonsPattern,
+    waves: WavesPattern,
+    diagonal: DiagonalPattern,
+    circles: CirclesPattern,
+    circuit: CircuitPattern,
+    mesh: MeshPattern,
+    topology: TopologyPattern,
+    starburst: StarburstPattern,
+    blueprint: BlueprintPattern,
 };
 
-const CardBackground = ({ pattern, textColor }) => {
-    const map = {
-        grid: GridPattern,
-        dots: DotsPattern,
-        hexagons: HexagonsPattern,
-        waves: WavesPattern,
-        diagonal: DiagonalPattern,
-        circles: CirclesPattern,
-        circuit: CircuitPattern,
-        mesh: MeshPattern,
-        topology: TopologyPattern,
-        starburst: StarburstPattern,
-        blueprint: BlueprintPattern,
-    };
-    const Comp = map[pattern] || GridPattern;
+const CardBackground = React.memo(({ pattern, textColor }) => {
+    const Comp = PATTERN_MAP[pattern] || GridPattern;
     return (
         <div className="absolute inset-0 overflow-hidden rounded-[2rem] md:rounded-[6rem] pointer-events-none">
             <Comp textColor={textColor} />
@@ -432,15 +434,15 @@ const CardBackground = ({ pattern, textColor }) => {
             />
         </div>
     );
-};
+});
 
 /* ─────────────────────────────────── */
 
 const Noise = React.memo(() => (
     <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.035] transform-gpu"
+        className="fixed inset-0 pointer-events-none z-0 opacity-[0.03] transform-gpu"
         style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
             backfaceVisibility: 'hidden',
         }}
     ></div>
@@ -448,39 +450,40 @@ const Noise = React.memo(() => (
 
 const FeatureCard = React.memo(({ item, index, totalCards, scrollYProgress, isMobile }) => {
     const containerRef = useRef(null);
+    const cardInViewRef = useRef(null);
+    const isCardInView = useInView(cardInViewRef, { margin: "100px 0px 100px 0px" });
 
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
-    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+    // Lighter springs for smoother, less CPU-intensive 3D tilt
+    const mouseXSpring = useSpring(x, { stiffness: 100, damping: 25, restDelta: 0.01 });
+    const mouseYSpring = useSpring(y, { stiffness: 100, damping: 25, restDelta: 0.01 });
 
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+    // Reduce 3D rotation intensity for smoother feel
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = useCallback((e) => {
         if (isMobile) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const xPct = (mouseX / width) - 0.5;
-        const yPct = (mouseY / height) - 0.5;
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+        const yPct = (e.clientY - rect.top) / rect.height - 0.5;
         x.set(xPct);
         y.set(yPct);
-    };
+    }, [isMobile, x, y]);
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = useCallback(() => {
         x.set(0);
         y.set(0);
-    };
+    }, [x, y]);
 
-    const targetScale = 1 - ((totalCards - index) * 0.04);
+    // Pre-compute scroll ranges
     const startRange = index / totalCards;
-    const endRange = 1;
+    const targetScale = 1 - ((totalCards - index) * 0.04);
 
-    const scrollScale = useTransform(scrollYProgress, [startRange, endRange], [1, targetScale]);
+    const scrollScale = useTransform(scrollYProgress, [startRange, 1], [1, targetScale]);
 
     const opacity = useTransform(
         scrollYProgress,
@@ -488,29 +491,27 @@ const FeatureCard = React.memo(({ item, index, totalCards, scrollYProgress, isMo
         [1, 0.95]
     );
 
+    // Memoize the style object to avoid re-creating every render
+    const motionStyle = useMemo(() => ({
+        scale: scrollScale,
+        opacity: opacity,
+        backgroundColor: item.color,
+        color: item.textColor,
+        backfaceVisibility: 'hidden',
+        z: 0
+    }), [scrollScale, opacity, item.color, item.textColor]);
+
     return (
-        <div className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0 perspective-1200 will-change-transform">
+        <div ref={cardInViewRef} className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-0 perspective-1200 will-change-transform">
             <motion.div
                 ref={containerRef}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                initial="initial"
-                whileInView="hover"
-                viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
-                style={{
-                    scale: scrollScale,
-                    opacity: opacity,
-                    rotateX: isMobile ? 0 : rotateX,
-                    rotateY: isMobile ? 0 : rotateY,
-                    backgroundColor: item.color,
-                    color: item.textColor,
-                    backfaceVisibility: 'hidden',
-                    z: 0
-                }}
+                onMouseMove={isMobile ? undefined : handleMouseMove}
+                onMouseLeave={isMobile ? undefined : handleMouseLeave}
+                style={motionStyle}
                 className="group relative w-full max-w-6xl h-auto min-h-[60vh] md:h-[80vh] rounded-[2rem] md:rounded-[6rem] p-6 md:p-24 shadow-[0_80px_150px_-30px_rgba(0,0,0,0.2)] flex flex-col justify-between overflow-hidden border border-white/10 cursor-crosshair transform-gpu"
             >
-                {/* ── Unique card background pattern ── */}
-                <CardBackground pattern={item.bgPattern} textColor={item.textColor} />
+                {/* ── Unique card background pattern (only render when in view) ── */}
+                {isCardInView && <CardBackground pattern={item.bgPattern} textColor={item.textColor} />}
 
                 <div className="flex justify-between items-start z-10">
                     <div className="space-y-6">
@@ -532,14 +533,25 @@ const FeatureCard = React.memo(({ item, index, totalCards, scrollYProgress, isMo
                             {item.desc}
                         </p>
 
-                        <div className="flex flex-wrap gap-3 pt-6">
+                        <div className="flex flex-wrap gap-2 md:gap-4 pt-6 md:pt-10">
                             {item.details.map((detail, i) => (
-                                <span
+                                <div
                                     key={i}
-                                    className="px-5 py-2 rounded-full border border-current text-xs font-bold uppercase tracking-widest opacity-90"
+                                    className="relative px-4 md:px-6 py-2 md:py-3 overflow-hidden group/tag cursor-default"
+                                    style={{
+                                        backgroundColor: 'rgba(0,0,0,0.03)',
+                                        border: '1px solid currentColor',
+                                        clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%)'
+                                    }}
                                 >
-                                    {detail}
-                                </span>
+                                    {/* Minimal hover fill */}
+                                    <div className="absolute inset-0 bg-current opacity-0 group-hover/tag:opacity-5 transition-opacity duration-300" />
+
+                                    <span className="relative text-[9px] md:text-[11px] font-black uppercase tracking-[0.25em] z-10 flex items-center gap-2">
+                                        <span className="w-1 h-1 bg-current opacity-40" />
+                                        {detail}
+                                    </span>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -547,25 +559,41 @@ const FeatureCard = React.memo(({ item, index, totalCards, scrollYProgress, isMo
 
                 </div>
 
-                {/* Hover shimmer overlay */}
+                {/* Hover shimmer overlay — CSS-only transition, no motion overhead */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2rem] md:rounded-[6rem]" />
             </motion.div>
         </div>
     );
 });
 
+/* ─── Stat rows (extracted to avoid re-creating arrays) ─── */
+const STATS = [
+    { val: "10+", pct: 100, label: "Curated Advantages", sub: "Tailored for growth" },
+    { val: "100%", pct: 100, label: "Client-First Focus", sub: "Every decision, your way" },
+    { val: "∞", pct: 85, label: "Infinite Scalability", sub: "Grows as you grow" },
+];
+
 export default function WhyChooseUs() {
     const container = useRef(null);
     const heroRef = useRef(null);
-    const [mounted, setMounted] = React.useState(false);
-    const [isMobile, setIsMobile] = React.useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-    React.useEffect(() => {
-        setMounted(true);
+    useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+
+        // Debounced resize handler to avoid excessive re-renders
+        let resizeTimer;
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(checkMobile, 150);
+        };
+
+        window.addEventListener('resize', handleResize, { passive: true });
+        return () => {
+            clearTimeout(resizeTimer);
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     const { scrollYProgress } = useScroll({
@@ -573,17 +601,21 @@ export default function WhyChooseUs() {
         offset: ['start start', 'end end']
     });
 
+    // Use lighter spring config — lower stiffness = less CPU per frame
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 150,
-        damping: 35,
-        restDelta: 0.001
+        stiffness: 300,
+        damping: 45,
+        restDelta: 0.0001
     });
 
     const bgColor = useTransform(
         smoothProgress,
-        [0, 0.01, 1],
+        [0, 0.08, 1],
         ["#FFFFFF", "#000000", "#000000"]
     );
+
+    // Pre-compute the background opacity transform once
+    const bgOpacity = useTransform(smoothProgress, [0, 0.2], [0, 1]);
 
     return (
         <motion.section
@@ -595,9 +627,7 @@ export default function WhyChooseUs() {
 
             {/* Premium Static Background - Clean & Minimalist */}
             <motion.div
-                style={{
-                    opacity: useTransform(smoothProgress, [0, 0.1], [0, 1]),
-                }}
+                style={{ opacity: bgOpacity }}
                 className="sticky top-0 left-0 w-full h-screen pointer-events-none overflow-hidden z-0 bg-[#020202]"
             >
                 {/* 1. Subtle Static Texture */}
@@ -620,14 +650,14 @@ export default function WhyChooseUs() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,#000_100%)] opacity-80" />
             </motion.div>
 
-            <div className="relative z-10 -mt-[100vh]">
-                <section ref={heroRef} className="min-h-screen flex flex-col justify-between px-6 md:px-16 relative pt-24 pb-16">
+            <div className="relative z-10 md:-mt-[100vh] -mt-[110vh]">
+                <section ref={heroRef} className="min-h-[90vh] md:min-h-screen flex flex-col justify-between px-6 md:px-16 relative pt-16 pb-8 md:pt-24 md:pb-16">
 
                     {/* Top row: eyebrow label + counter */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
                         className="flex items-center justify-between z-10"
                     >
                         <div className="flex items-center gap-3">
@@ -638,7 +668,7 @@ export default function WhyChooseUs() {
                     </motion.div>
 
                     {/* Centre: main editorial split */}
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-12 z-10 flex-1 py-10 md:py-0">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-12 z-10 flex-1 py-6 md:py-0">
 
                         {/* Left: Headline */}
                         <div className="flex-1 min-w-0 overflow-hidden">
@@ -646,10 +676,10 @@ export default function WhyChooseUs() {
                                 {/* WHY */}
                                 <div className="overflow-hidden">
                                     <motion.span
-                                        initial={{ y: "100%", opacity: 0 }}
+                                        initial={{ y: "40%", opacity: 0 }}
                                         animate={{ y: "0%", opacity: 1 }}
-                                        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                                        className="block text-[17vw] md:text-[11vw] text-black"
+                                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                        className="block text-[17vw] md:text-[11vw] text-black will-change-transform"
                                     >
                                         Why
                                     </motion.span>
@@ -658,11 +688,10 @@ export default function WhyChooseUs() {
                                 {/* CHOOSE */}
                                 <div className="overflow-hidden">
                                     <motion.span
-                                        initial={{ y: "100%", opacity: 0 }}
+                                        initial={{ y: "40%", opacity: 0 }}
                                         animate={{ y: "0%", opacity: 1 }}
-                                        transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                        className="block text-[17vw] md:text-[11vw] text-[#ffe01b]"
-                                        style={{ WebkitTextStroke: "2px #000" }}
+                                        transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                                        className="block text-[17vw] md:text-[11vw] text-[#ffe01b] will-change-transform"
                                     >
                                         Choose
                                     </motion.span>
@@ -671,10 +700,10 @@ export default function WhyChooseUs() {
                                 {/* US? */}
                                 <div className="overflow-hidden">
                                     <motion.span
-                                        initial={{ y: "100%", opacity: 0 }}
+                                        initial={{ y: "40%", opacity: 0 }}
                                         animate={{ y: "0%", opacity: 1 }}
-                                        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                                        className="block text-[17vw] md:text-[11vw] text-black"
+                                        transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                                        className="block text-[17vw] md:text-[11vw] text-black will-change-transform"
                                     >
                                         Us?
                                     </motion.span>
@@ -683,21 +712,21 @@ export default function WhyChooseUs() {
                         </div>
 
                         {/* Right: Descriptor + Stats */}
-                        <div className="md:max-w-[380px] shrink-0 flex flex-col gap-5">
+                        <div className="w-full max-w-[450px] md:max-w-[380px] shrink-0 flex flex-col gap-6">
                             {/* ── Animated rule ── */}
                             <motion.div
                                 initial={{ scaleX: 0, opacity: 0 }}
                                 animate={{ scaleX: 1, opacity: 1 }}
                                 transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                 style={{ originX: 0 }}
-                                className="hidden md:block w-full h-px bg-black/20"
+                                className="w-full h-px bg-black/15"
                             />
 
                             {/* ── Tagline ── */}
                             <motion.p
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 15 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.45 }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
                                 className="text-[15px] md:text-[16px] font-medium text-black/70 leading-[1.8] tracking-[0.01em]"
                             >
                                 We engineer tailored digital solutions that transform ambitious ideas into{" "}
@@ -706,28 +735,24 @@ export default function WhyChooseUs() {
                             </motion.p>
 
                             {/* ── Stat rows with progress bar animation ── */}
-                            <div className="divide-y divide-black/[0.08]">
-                                {[
-                                    { val: "10+", pct: 100, label: "Curated Advantages", sub: "Tailored for growth" },
-                                    { val: "100%", pct: 100, label: "Client-First Focus", sub: "Every decision, your way" },
-                                    { val: "∞", pct: 85, label: "Infinite Scalability", sub: "Grows as you grow" },
-                                ].map(({ val, pct, label, sub }, i) => (
-                                    <div key={label} className="group py-4 cursor-default">
-                                        <div className="flex items-center justify-between mb-2.5">
+                            <div className="border-y border-black/[0.08] divide-y divide-black/[0.08] py-1">
+                                {STATS.map(({ val, pct, label, sub }, i) => (
+                                    <div key={label} className="group py-5 cursor-default">
+                                        <div className="grid grid-cols-[1fr_auto] items-center gap-4 mb-3">
                                             <div>
                                                 <motion.p
-                                                    initial={{ opacity: 0, x: -12 }}
+                                                    initial={{ opacity: 0, x: -8 }}
                                                     animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ duration: 0.5, delay: 0.6 + i * 0.12 }}
-                                                    className="text-[11px] font-black uppercase tracking-[0.22em] text-black/70 group-hover:text-black transition-colors duration-300"
+                                                    transition={{ duration: 0.4, delay: 0.45 + i * 0.1 }}
+                                                    className="text-[12px] md:text-[13px] font-black uppercase tracking-[0.15em] text-black/70 group-hover:text-black transition-colors duration-300"
                                                 >
                                                     {label}
                                                 </motion.p>
                                                 <motion.p
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
-                                                    transition={{ duration: 0.5, delay: 0.7 + i * 0.12 }}
-                                                    className="text-[11px] font-medium text-black/50 mt-0.5"
+                                                    transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
+                                                    className="text-[11px] md:text-[12px] font-medium text-black/50 mt-0.5"
                                                 >
                                                     {sub}
                                                 </motion.p>
@@ -736,7 +761,7 @@ export default function WhyChooseUs() {
                                                 initial={{ opacity: 0, scale: 0.5 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ duration: 0.7, delay: 0.65 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                                                className="text-[2.6rem] font-black leading-none tracking-tighter text-black group-hover:text-[#ffe01b] transition-colors duration-300"
+                                                className="text-[2.2rem] md:text-[2.6rem] font-black leading-none tracking-tighter text-black group-hover:text-[#ffe01b] transition-colors duration-300 select-none text-right"
                                                 style={{ WebkitTextStroke: "1px rgba(0,0,0,0.08)" }}
                                             >
                                                 {val}
@@ -746,8 +771,9 @@ export default function WhyChooseUs() {
                                         <div className="h-[2px] w-full bg-black/[0.07] rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: "0%" }}
-                                                animate={{ width: `${pct}%` }}
-                                                transition={{ duration: 1.2, delay: 0.8 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                                                whileInView={{ width: `${pct}%` }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 0.8, delay: 0.6 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                                                 className="h-full bg-black group-hover:bg-[#ffe01b] rounded-full transition-colors duration-300"
                                             />
                                         </div>
@@ -760,7 +786,7 @@ export default function WhyChooseUs() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.7, delay: 1.1 }}
-                                className="flex items-center justify-between border-t border-black/[0.08] pt-4"
+                                className="flex items-center justify-between pt-3"
                             >
                                 <div className="flex items-center gap-2.5">
                                     <motion.span
@@ -779,22 +805,7 @@ export default function WhyChooseUs() {
                         </div>
                     </div>
 
-                    {/* Bottom: animated scroll indicator */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.8 }}
-                        className="flex items-center gap-4 z-10"
-                    >
-                        <div className="relative w-px h-14 bg-black/10 overflow-hidden">
-                            <motion.div
-                                animate={{ y: ["-100%", "200%"] }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-x-0 h-1/2 bg-black/50"
-                            />
-                        </div>
-                        {/* <span className="text-[10px] font-black uppercase tracking-[0.3em] text-black/30">Scroll to explore</span> */}
-                    </motion.div>
+
 
                 </section>
 

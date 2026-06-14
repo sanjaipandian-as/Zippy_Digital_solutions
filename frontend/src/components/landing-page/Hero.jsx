@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
 import ContactUs from "./CotactUs";
 
-const AsteriskShape = () => (
-    <div className="w-full h-full bg-[#ffe01b] flex items-center justify-center p-0 overflow-hidden relative">
-        <div className="w-full h-full flex items-center justify-center scale-[0.7]">
+const AsteriskShape = React.memo(() => (
+    <div
+        className="w-full h-full bg-[#ffe01b] flex items-center justify-center p-0 overflow-hidden relative"
+        style={{ clipPath: "polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)" }}
+    >
+        <div className="w-full h-full flex items-center justify-center scale-[0.62]">
             <svg viewBox="0 0 16 16" className="w-full h-full text-black" fill="currentColor">
                 {[
                     "M5.6906 6.00001L3.16512 1.62576C4.50811 0.605527 6.18334 0 8 0C8.37684 0 8.74759 0.0260554 9.11056 0.076463L5.6906 6.00001Z",
@@ -22,9 +25,9 @@ const AsteriskShape = () => (
             </svg>
         </div>
     </div>
-);
+));
 
-const ClusterShape = () => (
+const ClusterShape = React.memo(() => (
     <div className="w-full h-full bg-white flex items-center justify-center p-0">
         <svg viewBox="0 0 150 150" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 130 L75 25 L130 130"
@@ -35,9 +38,9 @@ const ClusterShape = () => (
                 stroke="black" strokeWidth="16" fill="none" opacity="0.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     </div>
-);
+));
 
-const ArrowIconShape = () => (
+const ArrowIconShape = React.memo(() => (
     <div className="w-full h-full bg-transparent flex items-center justify-center p-0">
         <svg viewBox="0 0 200 200" className="w-full h-full scale-[1.25]" xmlns="http://www.w3.org/2000/svg">
             <polygon
@@ -51,9 +54,9 @@ const ArrowIconShape = () => (
             </g>
         </svg>
     </div>
-);
+));
 
-const SmallLabel = ({ children, className = "", style }) => (
+const SmallLabel = React.memo(({ children, className = "", style }) => (
     <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -67,11 +70,9 @@ const SmallLabel = ({ children, className = "", style }) => (
             <span>{children}</span>
         </div>
     </motion.div>
-);
+));
 
-
-
-const OrbitWrapper = ({ children, delay = 0, reverse = false }) => (
+const OrbitWrapper = React.memo(({ children, delay = 0, reverse = false }) => (
     <motion.div
         animate={{ rotate: reverse ? -360 : 360 }}
         transition={{
@@ -84,7 +85,11 @@ const OrbitWrapper = ({ children, delay = 0, reverse = false }) => (
     >
         {children}
     </motion.div>
-);
+));
+
+/* ─── Modal transition variants (static, outside component) ─── */
+const MODAL_EASE = [0.76, 0, 0.24, 1];
+const MODAL_TRANSITION = { duration: 0.5, ease: MODAL_EASE };
 
 function MorphingModal({ isOpen, onClose, initialPos }) {
     const [mounted, setMounted] = useState(false);
@@ -111,7 +116,7 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
         }
     }, [isOpen, initialPos]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         if (isClosingRef.current) return;
         isClosingRef.current = true;
         setShowContent(false);
@@ -126,7 +131,7 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
                 }, 500);
             }, 550);
         }, 550);
-    };
+    }, [onClose]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -142,59 +147,62 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
             window.removeEventListener('wheel', handleScrollAttempt);
             window.removeEventListener('touchmove', handleScrollAttempt);
         };
-    }, [isOpen]);
+    }, [isOpen, handleClose]);
+
+    const variants = useMemo(() => {
+        if (!initialPos) return {};
+        return {
+            button: {
+                top: initialPos.top,
+                left: initialPos.left,
+                width: initialPos.width,
+                height: initialPos.height,
+                x: 0,
+                y: 0,
+                clipPath: "polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)",
+                transition: MODAL_TRANSITION
+            },
+            center: {
+                top: "50%",
+                left: "50%",
+                x: "-50%",
+                y: "-50%",
+                width: initialPos.height,
+                height: initialPos.height,
+                clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
+                transition: MODAL_TRANSITION
+            },
+            pillar: {
+                top: 0,
+                left: "50%",
+                x: "-50%",
+                y: 0,
+                width: initialPos.height,
+                height: "100vh",
+                clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
+                transition: MODAL_TRANSITION
+            },
+            modal: {
+                top: 0,
+                left: "50%",
+                x: "-50%",
+                y: 0,
+                width: "100vw",
+                height: "100vh",
+                clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
+                transition: MODAL_TRANSITION
+            }
+        };
+    }, [initialPos]);
 
     if (!mounted || !initialPos) return null;
-
-    const variants = {
-        button: {
-            top: initialPos.top,
-            left: initialPos.left,
-            width: initialPos.width,
-            height: initialPos.height,
-            x: 0,
-            y: 0,
-            clipPath: "polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)",
-            transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
-        },
-        center: {
-            top: "50%",
-            left: "50%",
-            x: "-50%",
-            y: "-50%",
-            width: initialPos.height,
-            height: initialPos.height,
-            clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
-            transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
-        },
-        pillar: {
-            top: 0,
-            left: "50%",
-            x: "-50%",
-            y: 0,
-            width: initialPos.height,
-            height: "100vh",
-            clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
-            transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
-        },
-        modal: {
-            top: 0,
-            left: "50%",
-            x: "-50%",
-            y: 0,
-            width: "100vw",
-            height: "100vh",
-            clipPath: "polygon(0 0, 100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%, 0 0)",
-            transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
-        }
-    };
 
     return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[99999] pointer-events-none">
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-md pointer-events-auto" onClick={handleClose} />
-                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ffe01b] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl">
+                    <motion.div initial="button" animate={status} exit="button" variants={variants} className="absolute bg-[#ffe01b] overflow-hidden flex flex-col items-center justify-center pointer-events-auto shadow-2xl transform-gpu">
                         <AnimatePresence mode="wait">
 
                             {status === "modal" && showContent && (
@@ -211,16 +219,126 @@ function MorphingModal({ isOpen, onClose, initialPos }) {
     );
 }
 
+/* ─── Work With Us Button (extracted & enhanced) ─── */
+const WorkWithUsButton = React.memo(({ buttonRef, introFinished, isContactOpen, isMobile, xRight, mobileButtonRotate, buttonRotate, handleOpenContact }) => {
+    return (
+        <motion.button
+            ref={buttonRef}
+            initial={{ width: "65px", opacity: 0, scale: 0.8 }}
+            animate={{
+                width: isContactOpen ? "50px" : (isMobile ? "260px" : "290px"),
+                opacity: isContactOpen ? 0 : 1,
+                scale: isContactOpen ? 0.5 : 1,
+            }}
+            transition={{
+                width: { delay: introFinished ? 0 : 3.2, duration: introFinished ? 0.6 : 1.4, ease: [0.16, 1, 0.3, 1] },
+                opacity: { delay: introFinished ? 0 : 2.4, duration: introFinished ? 0.4 : 0.8 },
+                scale: { delay: introFinished ? 0 : 2.4, duration: introFinished ? 0.4 : 0.8 },
+            }}
+            whileHover="hover"
+            whileTap={{ scale: 0.96 }}
+            onClick={handleOpenContact}
+            className="relative bg-zinc-900 text-white h-[52px] md:h-[58px] lg:h-[65px] flex items-center justify-center overflow-hidden ml-0 md:ml-10 self-center group pointer-events-auto flex-shrink-0 transform-gpu cursor-pointer"
+            style={{
+                clipPath: "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
+                x: isMobile ? 0 : xRight,
+                rotate: isMobile ? mobileButtonRotate : buttonRotate,
+                boxShadow: "0 8px 32px -4px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,224,27,0.15)"
+            }}
+        >
+            {/* Smooth background fill on hover */}
+            <motion.div
+                variants={{
+                    hover: { x: 0 }
+                }}
+                initial={{ x: "-101%" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 bg-[#ffe01b] pointer-events-none transform-gpu"
+            />
+
+            {/* Animated yellow accent border glow */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                transition={{ delay: introFinished ? 0.5 : 4.2, duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 pointer-events-none transform-gpu"
+                style={{
+                    boxShadow: "inset 0 0 0 1.5px rgba(255,224,27,0.35)",
+                    clipPath: "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)"
+                }}
+            />
+
+            {/* Shine sweep - always present but more visible on hover */}
+            <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: "200%" }}
+                transition={{ delay: introFinished ? 0 : 3.8, duration: 1.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 3 }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 pointer-events-none transform-gpu z-10"
+            />
+
+            <div className="relative w-full h-full flex items-center overflow-hidden z-20">
+                {/* Text Wrapper */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isContactOpen ? 0 : 1 }}
+                    transition={{
+                        delay: introFinished ? 0 : 4.4,
+                        duration: 1.0,
+                        ease: "easeOut"
+                    }}
+                    className="absolute inset-0 flex items-center justify-start pointer-events-none"
+                >
+                    <motion.span
+                        variants={{
+                            hover: { color: "#18181b", x: 5 }
+                        }}
+                        className="font-sans font-bold text-[16px] md:text-[19px] lg:text-[22px] whitespace-nowrap uppercase pl-10 md:pl-8 transition-colors duration-300"
+                    >
+                        Work with us
+                    </motion.span>
+                </motion.div>
+
+                {/* Arrow icon */}
+                <motion.div
+                    initial={{ rotate: -90, scale: 0 }}
+                    animate={{ rotate: 0, scale: 1 }}
+                    variants={{
+                        hover: { rotate: 45, backgroundColor: "#18181b" }
+                    }}
+                    transition={{
+                        rotate: { type: "spring", stiffness: 200, damping: 15 },
+                        backgroundColor: { duration: 0.3 }
+                    }}
+                    className="absolute right-[10px] md:right-[14.5px] top-1/2 -translate-y-1/2 bg-[#ffe01b] flex items-center justify-center transition-colors duration-300 shadow-sm w-9 h-9 md:w-10 md:h-10 z-30"
+                    style={{
+                        clipPath: "polygon(30% 0%, 70% 0%, 90% 10%, 100% 30%, 100% 70%, 90% 90%, 70% 100%, 30% 100%, 10% 90%, 0% 70%, 0% 30%, 10% 10%)"
+                    }}
+                >
+                    <motion.svg
+                        variants={{
+                            hover: { stroke: "#ffe01b", x: 1, y: -1 }
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3.5"
+                    >
+                        <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </motion.svg>
+                </motion.div>
+            </div>
+        </motion.button>
+    );
+});
+
 export default function App() {
     const { scrollY } = useScroll();
     const yText = useTransform(scrollY, [0, 1500], [0, 50]);
     const scaleText = useTransform(scrollY, [0, 1500], [1, 0.98]);
 
-    // Split Motion with Spring smoothing for fluidity
+    // Split Motion with Spring smoothing for fluidity — lighter springs
     const xLeftRaw = useTransform(scrollY, [0, 1500], [0, -600]);
     const xRightRaw = useTransform(scrollY, [0, 1500], [0, 600]);
 
-    const springConfig = { stiffness: 40, damping: 20, mass: 0.5 };
+    const springConfig = useMemo(() => ({ stiffness: 40, damping: 20, mass: 0.5 }), []);
     const xLeft = useSpring(xLeftRaw, springConfig);
     const xRight = useSpring(xRightRaw, springConfig);
 
@@ -246,14 +364,16 @@ export default function App() {
     const [buttonPos, setButtonPos] = useState(null);
     const buttonRef = useRef(null);
 
-    const handleOpenContact = (e) => {
+    const handleOpenContact = useCallback((e) => {
         e.stopPropagation();
         if (buttonRef.current) {
             const rect = buttonRef.current.getBoundingClientRect();
             setButtonPos({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
             setIsContactOpen(true);
         }
-    };
+    }, []);
+
+    const handleCloseContact = useCallback(() => setIsContactOpen(false), []);
 
     const fontClass = "font-bebas text-[18vw] sm:text-[20vw] md:text-[9.2rem] lg:text-[12.8rem] leading-[0.8] tracking-[0.04em] text-zinc-900 select-none whitespace-nowrap";
     const shapeWrapper = "w-[16vw] h-[16vw] sm:w-[18vw] sm:h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] mx-0.5 md:mx-4 lg:mx-6 shrink-0 self-center z-20 relative";
@@ -292,19 +412,30 @@ export default function App() {
         };
     }, []);
 
-    const textFade = {
+    const textFade = useMemo(() => ({
         initial: { opacity: 0, y: 20, filter: "blur(10px)" },
         animate: { opacity: 1, y: 0, filter: "blur(0px)" },
         transition: { duration: 0.8, delay: introFinished ? 0 : 2.0, ease: "easeOut" }
-    };
+    }), [introFinished]);
 
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+
+        // Debounced resize handler
+        let resizeTimer;
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(checkMobile, 150);
+        };
+
+        window.addEventListener('resize', handleResize, { passive: true });
+        return () => {
+            clearTimeout(resizeTimer);
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     // Forceful scroll lock during intro animation and when contact modal is open
@@ -346,7 +477,7 @@ export default function App() {
         };
     }, [introFinished, isContactOpen]);
 
-    const CenteredOrbit = () => {
+    const CenteredOrbit = useCallback(() => {
         // Diagonal offset values
         const offset = isMobile ? 60 : 150;
 
@@ -357,11 +488,11 @@ export default function App() {
                 <div className="relative flex items-center justify-center gap-4 md:gap-12 lg:gap-16">
                     {/* Icon 1: Asterisk - From Left -> Horizontal -> Up-Left Diagonal */}
                     <motion.div
-                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative"
+                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative transform-gpu"
                         initial={{ x: "-100vw", y: 0, opacity: 0 }}
                         animate={{
                             x: 0,
-                            y: [0, 0, -offset], // 0 to 0.5 (Horizontal), 0.5 to 1 (Diagonal Up)
+                            y: [0, 0, -offset],
                             opacity: 1
                         }}
                         transition={{
@@ -377,10 +508,10 @@ export default function App() {
 
                     {/* Icon 2: Cluster - From Bottom -> Horizontal -> Center Diagonal */}
                     <motion.div
-                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative"
+                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative transform-gpu"
                         initial={{ y: "100vh", opacity: 0 }}
                         animate={{
-                            y: ["100vh", 0, 0], // 0 to 0.5 (Enter), 0.5 to 1 (Stay)
+                            y: ["100vh", 0, 0],
                             opacity: 1
                         }}
                         transition={{
@@ -395,11 +526,11 @@ export default function App() {
 
                     {/* Icon 3: Arrow - From Right -> Horizontal -> Down-Right Diagonal */}
                     <motion.div
-                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative"
+                        className="w-[18vw] h-[18vw] md:w-[7rem] md:h-[7rem] lg:w-[10.5rem] lg:h-[10.5rem] relative transform-gpu"
                         initial={{ x: "100vw", y: 0, opacity: 0 }}
                         animate={{
                             x: 0,
-                            y: [0, 0, offset], // 0 to 0.5 (Horizontal), 0.5 to 1 (Diagonal Down)
+                            y: [0, 0, offset],
                             opacity: 1
                         }}
                         transition={{
@@ -415,7 +546,7 @@ export default function App() {
                 </div>
             </motion.div>
         );
-    };
+    }, [isMobile]);
 
     return (
         <div className="sticky top-0 w-full h-[100dvh] bg-white selection:bg-[#ffe01b] selection:text-black overflow-hidden z-0 flex flex-col items-center justify-center pt-10 md:pt-16">
@@ -429,11 +560,11 @@ export default function App() {
                 {showOrbit && <CenteredOrbit />}
                 <motion.div style={{ opacity: opacityLine1 }} className={`relative flex ${isMobile ? 'flex-col gap-3' : 'items-center justify-center'} w-full overflow-visible`}>
                     <motion.div className={`flex items-center ${isMobile ? 'justify-start pl-2 gap-4' : 'justify-center'}`}>
-                        <motion.span {...textFade} style={{ x: xLeft }} className={fontClass}>TRANS</motion.span>
-                        <motion.div style={{ opacity: iconOpacity, scale: iconScale }} className={shapeWrapper}>
+                        <motion.span {...textFade} style={{ x: xLeft }} className={`${fontClass} will-change-transform`}>TRANS</motion.span>
+                        <motion.div style={{ opacity: iconOpacity, scale: iconScale }} className={`${shapeWrapper} -translate-y-[4%]`}>
                             {!showOrbit && (
                                 <motion.div
-                                    className="w-full h-full"
+                                    className="w-full h-full transform-gpu"
                                     layoutId="icon1"
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 >
@@ -441,22 +572,22 @@ export default function App() {
                                 </motion.div>
                             )}
                         </motion.div>
-                        {!isMobile && <motion.span {...textFade} style={{ x: xRight }} className={fontClass}>FORMING</motion.span>}
+                        {!isMobile && <motion.span {...textFade} style={{ x: xRight }} className={`${fontClass} will-change-transform`}>FORMING</motion.span>}
                     </motion.div>
                     {isMobile && (
                         <motion.div className="flex justify-end w-full pr-2">
-                            <motion.span {...textFade} style={{ x: xRight }} className={fontClass}>FORMING</motion.span>
+                            <motion.span {...textFade} style={{ x: xRight }} className={`${fontClass} will-change-transform`}>FORMING</motion.span>
                         </motion.div>
                     )}
                 </motion.div>
 
                 <motion.div style={{ opacity: opacityLine2 }} className={`relative flex ${isMobile ? 'flex-col gap-6' : 'items-center'} justify-center w-full text-center overflow-visible`}>
                     <motion.div className="flex justify-center items-center">
-                        <motion.span {...textFade} style={{ x: xLeft }} className={fontClass}>IDEAS</motion.span>
+                        <motion.span {...textFade} style={{ x: xLeft }} className={`${fontClass} will-change-transform`}>IDEAS</motion.span>
                         <motion.div style={{ opacity: iconOpacity, scale: iconScale }} className={shapeWrapper}>
                             {!showOrbit && (
                                 <motion.div
-                                    className="w-full h-full"
+                                    className="w-full h-full transform-gpu"
                                     layoutId="icon2"
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 >
@@ -464,72 +595,28 @@ export default function App() {
                                 </motion.div>
                             )}
                         </motion.div>
-                        <motion.span {...textFade} style={{ x: xRight }} className={fontClass}>INTO</motion.span>
+                        <motion.span {...textFade} style={{ x: xRight }} className={`${fontClass} will-change-transform`}>INTO</motion.span>
                     </motion.div>
 
-                    <motion.button
-                        ref={buttonRef}
-                        initial={{ width: "65px", opacity: 0, scale: 0.8 }}
-                        animate={{
-                            width: isContactOpen ? "50px" : (isMobile ? "260px" : "280px"),
-                            opacity: isContactOpen ? 0 : 1,
-                            scale: isContactOpen ? 0.5 : 1,
-                            y: [0, -4, 0]
-                        }}
-                        transition={{
-                            width: { delay: introFinished ? 0 : 3.2, duration: introFinished ? 0.6 : 1.4, ease: [0.16, 1, 0.3, 1] },
-                            opacity: { delay: introFinished ? 0 : 2.4, duration: introFinished ? 0.4 : 0.8 },
-                            scale: { delay: introFinished ? 0 : 2.4, duration: introFinished ? 0.4 : 0.8 },
-                            y: { repeat: Infinity, duration: 3, ease: "easeInOut" }
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleOpenContact}
-                        className="relative bg-zinc-900 text-white h-[48px] md:h-[55px] lg:h-[62px] flex items-center justify-center overflow-hidden ml-0 md:ml-10 self-center group pointer-events-auto flex-shrink-0"
-                        style={{
-                            clipPath: "polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px)",
-                            x: isMobile ? 0 : xRight,
-                            rotate: isMobile ? mobileButtonRotate : buttonRotate
-                        }}
-                    >
-                        {/* Shine effect on expand */}
-                        <motion.div
-                            initial={{ x: "-100%" }}
-                            animate={{ x: "200%" }}
-                            transition={{ delay: introFinished ? 0 : 3.8, duration: 1.5, ease: "easeInOut" }}
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 pointer-events-none"
-                        />
-
-                        <div className="flex items-center justify-between w-full h-full px-4 md:px-8">
-                            <motion.span
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: introFinished ? 0 : 3.6, duration: 0.8 }}
-                                className="font-sans font-bold text-[14px] md:text-[16px] lg:text-[18px] whitespace-nowrap tracking-[0.1em] uppercase"
-                            >
-                                Work with us
-                            </motion.span>
-                            <motion.div
-                                initial={{ rotate: -90, scale: 0 }}
-                                animate={{ rotate: 0, scale: 1 }}
-                                transition={{ delay: introFinished ? 0 : 2.8, duration: 0.6, type: "spring" }}
-                                className="shrink-0"
-                            >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300">
-                                    <path d="M7 17L17 7M17 7H7M17 7V17" />
-                                </svg>
-                            </motion.div>
-                        </div>
-                    </motion.button>
+                    <WorkWithUsButton
+                        buttonRef={buttonRef}
+                        introFinished={introFinished}
+                        isContactOpen={isContactOpen}
+                        isMobile={isMobile}
+                        xRight={xRight}
+                        mobileButtonRotate={mobileButtonRotate}
+                        buttonRotate={buttonRotate}
+                        handleOpenContact={handleOpenContact}
+                    />
                 </motion.div>
 
                 <motion.div style={{ opacity: opacityLine3 }} className="relative flex items-center justify-center w-full text-center overflow-visible">
                     <motion.div className="flex justify-center items-center">
-                        <motion.span {...textFade} style={{ x: xLeft }} className={`${fontClass} !text-[#ffe01b]`}>EXPERI</motion.span>
+                        <motion.span {...textFade} style={{ x: xLeft }} className={`${fontClass} !text-[#ffe01b] will-change-transform`}>EXPERI</motion.span>
                         <motion.div style={{ opacity: iconOpacity, scale: iconScale }} className={shapeWrapper}>
                             {!showOrbit && (
                                 <motion.div
-                                    className="w-full h-full"
+                                    className="w-full h-full transform-gpu"
                                     layoutId="icon3"
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 >
@@ -537,7 +624,7 @@ export default function App() {
                                 </motion.div>
                             )}
                         </motion.div>
-                        <motion.span {...textFade} style={{ x: xRight }} className={`${fontClass} !text-[#ffe01b]`}>ENCES</motion.span>
+                        <motion.span {...textFade} style={{ x: xRight }} className={`${fontClass} !text-[#ffe01b] will-change-transform`}>ENCES</motion.span>
                     </motion.div>
                 </motion.div>
             </motion.div>
@@ -547,7 +634,7 @@ export default function App() {
                 style={{ x: xRight }}
                 className="hidden lg:block absolute right-[45%] top-[6%] text-right"
             >
-                CUSTOM AI SOLUTIONS<br />& INTEGRATIONS
+                CUSTOM AI SOLUTIONS<br />&amp; INTEGRATIONS
             </SmallLabel>
 
             <SmallLabel
@@ -571,7 +658,7 @@ export default function App() {
                 MAINTENANCE<br />& SECURITY
             </SmallLabel>
 
-            <MorphingModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} initialPos={buttonPos} />
+            <MorphingModal isOpen={isContactOpen} onClose={handleCloseContact} initialPos={buttonPos} />
         </div>
     );
 }
