@@ -76,7 +76,6 @@ export default function CaseStudy() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        if (isMobile) return;
         const index = Math.min(
             caseStudies.length - 1,
             Math.floor(latest * caseStudies.length)
@@ -137,8 +136,8 @@ export default function CaseStudy() {
     };
 
     return (
-        <div ref={containerRef} id="case-studies" className="relative w-full lg:h-[300vh] bg-[#020202]">
-            <div className="sticky top-0 w-full py-16 lg:py-0 lg:h-screen flex flex-col justify-center items-center overflow-hidden select-none">
+        <div ref={containerRef} id="case-studies" className="relative w-full h-[300vh] bg-[#020202]">
+            <div className="sticky top-0 w-full py-12 md:py-0 h-screen flex flex-col justify-center items-center overflow-hidden select-none">
                 {/* ─── Visual Effects Backdrops ─── */}
                 <div className="absolute inset-0 bg-transparent z-0 pointer-events-none" />
 
@@ -182,7 +181,7 @@ export default function CaseStudy() {
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative">
 
                         {/* Left Column - Staggered Challenge Cards (Curved like ) with upright flat cards) */}
-                        <div className="md:col-span-6 relative w-full md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
+                        <div className="md:col-span-6 relative w-full h-[60vh] md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
                             {caseStudies.map((study, index) => {
                                 const isActive = index === activeIndex;
                                 const diff = getDiff(index, activeIndex);
@@ -195,15 +194,15 @@ export default function CaseStudy() {
                                         whileInView={{ opacity: 1 }}
                                         viewport={{ once: true, margin: "-100px" }}
                                         animate={{
-                                            filter: isMobile ? "none" : (isActive ? "blur(0px)" : "blur(8px)"),
-                                            opacity: isMobile ? 1 : (isActive ? 1 : 0.22),
-                                            scale: isMobile ? 1 : (isActive ? 1.03 : 0.97),
+                                            filter: isActive ? "blur(0px)" : (isMobile ? "blur(3px)" : "blur(8px)"),
+                                            opacity: isActive ? 1 : (isMobile ? 0.15 : 0.22),
+                                            scale: isActive ? 1.02 : 0.96,
                                             borderColor: "transparent",
-                                            boxShadow: isMobile ? "0 4px 12px rgba(0, 0, 0, 0.1)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
-                                            y: isMobile ? 0 : `calc(-50% + ${diff * 18}vh)`,
-                                            x: isMobile ? 0 : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
+                                            boxShadow: isMobile ? "0 10px 25px rgba(0, 0, 0, 0.4)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
+                                            y: isMobile ? `calc(-50% + ${diff * 14}vh)` : `calc(-50% + ${diff * 18}vh)`,
+                                            x: isMobile ? "-50%" : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
                                             backgroundColor: "#ffffff",
-                                            pointerEvents: isMobile ? "auto" : (isActive ? "auto" : "none")
+                                            pointerEvents: isActive ? "auto" : "none"
                                         }}
                                         transition={{
                                             y: {
@@ -220,12 +219,11 @@ export default function CaseStudy() {
                                             opacity: { duration: isWrapping ? 0 : 0.4 },
                                             scale: { duration: isWrapping ? 0 : 0.4 }
                                         }}
-                                        className={`relative md:absolute w-full lg:w-[45%] md:w-[55%] aspect-auto md:aspect-square rounded-3xl overflow-hidden border shadow-2xl flex flex-col group cursor-pointer`}
+                                        className={`absolute w-[88%] sm:w-[70%] md:w-[55%] lg:w-[45%] aspect-auto md:aspect-square rounded-3xl overflow-hidden border shadow-2xl flex flex-col group cursor-pointer`}
                                         style={{
                                             zIndex: isActive ? 100 : 50 - Math.abs(diff) * 10,
-                                            marginTop: isMobile ? (index === 0 ? "0px" : "1.5rem") : "0px",
-                                            top: isMobile ? "auto" : "50%",
-                                            left: isMobile ? "auto" : (isLargeScreen ? "22%" : "12%"),
+                                            top: "50%",
+                                            left: isMobile ? "50%" : (isLargeScreen ? "22%" : "12%"),
                                             willChange: "transform, opacity"
                                         }}
                                     >
