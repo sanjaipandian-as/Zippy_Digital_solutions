@@ -50,7 +50,7 @@ export default function ContactUs({ isOpen, onClose }) {
 
             if (response.ok) {
                 setStatus("success");
-                setFormData({ email: "", company: "", interest: "", message: "" });
+                setFormData({ name: "", email: "", company: "", interest: "", message: "" });
                 setTimeout(() => {
                     onClose();
                     setStatus("idle");
