@@ -76,7 +76,6 @@ export default function CaseStudy() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        if (isMobile) return;
         const index = Math.min(
             caseStudies.length - 1,
             Math.floor(latest * caseStudies.length)
@@ -137,8 +136,8 @@ export default function CaseStudy() {
     };
 
     return (
-        <div ref={containerRef} id="case-studies" className="relative w-full lg:h-[300vh] bg-[#020202]">
-            <div className="sticky top-0 w-full py-16 lg:py-0 lg:h-screen flex flex-col justify-center items-center overflow-hidden select-none">
+        <div ref={containerRef} id="case-studies" className="relative w-full h-[300vh] bg-[#020202]">
+            <div className="sticky top-0 w-full py-12 md:py-0 h-screen flex flex-col justify-center items-center overflow-hidden select-none">
                 {/* ─── Visual Effects Backdrops ─── */}
                 <div className="absolute inset-0 bg-transparent z-0 pointer-events-none" />
 
@@ -155,7 +154,7 @@ export default function CaseStudy() {
                 />
 
                 {/* Content Container */}
-                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 relative z-20 flex flex-col justify-center">
+                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 relative z-20 flex flex-col justify-between md:justify-center h-[88vh] md:h-auto py-4 md:py-0">
 
                     {/* ─── Top: Header Typography ─── */}
                     <div className="w-full text-center mb-8 lg:mb-14 flex flex-col items-center">
@@ -176,13 +175,48 @@ export default function CaseStudy() {
                                 BUT NOW ZIPPY DIGITAL SOLUTIONS IS HERE
                             </p>
                         </div>
+
+                        {/* Mobile Center Button (Placed ABOVE the cards) */}
+                        <div className="flex md:hidden justify-center mt-5 z-[120] relative pointer-events-auto">
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="group relative focus:outline-none"
+                            >
+                                <div
+                                    className="bg-zinc-900 p-[1px] transition-colors duration-300 group-hover:bg-zinc-700"
+                                    style={{
+                                        clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)"
+                                    }}
+                                >
+                                    <div
+                                        className="bg-[#ffe01b] pl-8 pr-4 py-3.5 flex items-center justify-between gap-6"
+                                        style={{
+                                            clipPath: "polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px)"
+                                        }}
+                                    >
+                                        <span className="text-zinc-950 font-sans font-bold tracking-[0.12em] text-xs uppercase">
+                                            EXPLORE FULL CASE STUDY
+                                        </span>
+                                        <div
+                                            className="w-8 h-8 bg-zinc-950 flex items-center justify-center text-white transition-transform duration-300 shrink-0"
+                                            style={{
+                                                clipPath: "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)"
+                                            }}
+                                        >
+                                            <ArrowUpRight className="w-4 h-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.button>
+                        </div>
                     </div>
 
                     {/* Grid Split */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative mt-16 md:mt-0">
 
                         {/* Left Column - Staggered Challenge Cards (Curved like ) with upright flat cards) */}
-                        <div className="md:col-span-6 relative w-full md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
+                        <div className="md:col-span-6 relative w-full h-[45vh] md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
                             {caseStudies.map((study, index) => {
                                 const isActive = index === activeIndex;
                                 const diff = getDiff(index, activeIndex);
@@ -195,15 +229,15 @@ export default function CaseStudy() {
                                         whileInView={{ opacity: 1 }}
                                         viewport={{ once: true, margin: "-100px" }}
                                         animate={{
-                                            filter: isMobile ? "none" : (isActive ? "blur(0px)" : "blur(8px)"),
-                                            opacity: isMobile ? 1 : (isActive ? 1 : 0.22),
-                                            scale: isMobile ? 1 : (isActive ? 1.03 : 0.97),
+                                            filter: isActive ? "blur(0px)" : (isMobile ? "blur(3px)" : "blur(8px)"),
+                                            opacity: isActive ? 1 : (isMobile ? 0.15 : 0.22),
+                                            scale: isActive ? 1.02 : 0.96,
                                             borderColor: "transparent",
-                                            boxShadow: isMobile ? "0 4px 12px rgba(0, 0, 0, 0.1)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
-                                            y: isMobile ? 0 : `calc(-50% + ${diff * 18}vh)`,
-                                            x: isMobile ? 0 : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
+                                            boxShadow: isMobile ? "0 10px 25px rgba(0, 0, 0, 0.4)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
+                                            y: isMobile ? `calc(-50% + ${diff * 8}vh)` : `calc(-50% + ${diff * 18}vh)`,
+                                            x: isMobile ? "-50%" : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
                                             backgroundColor: "#ffffff",
-                                            pointerEvents: isMobile ? "auto" : (isActive ? "auto" : "none")
+                                            pointerEvents: isActive ? "auto" : "none"
                                         }}
                                         transition={{
                                             y: {
@@ -220,17 +254,16 @@ export default function CaseStudy() {
                                             opacity: { duration: isWrapping ? 0 : 0.4 },
                                             scale: { duration: isWrapping ? 0 : 0.4 }
                                         }}
-                                        className={`relative md:absolute w-full lg:w-[45%] md:w-[55%] aspect-auto md:aspect-square rounded-3xl overflow-hidden border shadow-2xl flex flex-col group cursor-pointer`}
+                                        className={`absolute w-[88%] sm:w-[70%] md:w-[55%] lg:w-[45%] aspect-auto md:aspect-square rounded-3xl overflow-hidden border shadow-2xl flex flex-col group cursor-pointer`}
                                         style={{
                                             zIndex: isActive ? 100 : 50 - Math.abs(diff) * 10,
-                                            marginTop: isMobile ? (index === 0 ? "0px" : "1.5rem") : "0px",
-                                            top: isMobile ? "auto" : "50%",
-                                            left: isMobile ? "auto" : (isLargeScreen ? "22%" : "12%"),
+                                            top: "50%",
+                                            left: isMobile ? "50%" : (isLargeScreen ? "22%" : "12%"),
                                             willChange: "transform, opacity"
                                         }}
                                     >
                                         {/* Header */}
-                                        <div className="px-6 py-4 pb-0 flex flex-col items-center text-center w-full z-20 relative">
+                                        <div className="px-4 md:px-6 py-3 md:py-4 pb-0 flex flex-col items-center text-center w-full z-20 relative">
                                             <span className={`text-[10px] font-mono uppercase tracking-[0.15em] font-bold transition-colors duration-300 ${isActive ? "text-amber-700" : "text-zinc-500"}`}>
                                                 {isMobile ? study.sector : study.title}
                                             </span>
@@ -240,9 +273,9 @@ export default function CaseStudy() {
                                         </div>
 
                                         {/* Card Body */}
-                                        <div className={`grid grid-cols-1 border-t mt-3 relative z-10 flex-grow transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
+                                        <div className={`grid grid-cols-1 border-t mt-2 md:mt-3 relative z-10 flex-grow transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
                                             {/* Challenge Section */}
-                                            <div className="relative overflow-hidden px-6 py-4 pt-3 pb-3 flex flex-col justify-center items-center text-center flex-grow">
+                                            <div className="relative overflow-hidden px-4 md:px-6 py-3 md:py-4 pt-2 md:pt-3 pb-2 md:pb-3 flex flex-col justify-center items-center text-center flex-grow">
                                                 <img
                                                     src={study.problemBg}
                                                     alt={`${study.title} Problem`}
@@ -255,14 +288,14 @@ export default function CaseStudy() {
                                                     <h4 className={`text-[9px] font-bold uppercase tracking-[0.3em] mb-2 font-mono flex items-center justify-center gap-1.5 transition-colors duration-300 ${isActive ? "text-rose-600" : "text-rose-500/80"}`}>
                                                         <HelpCircle className="w-3.5 h-3.5" /> THE CHALLENGE
                                                     </h4>
-                                                    <p className={`text-[14px] lg:text-[16px] leading-relaxed text-center font-normal transition-colors duration-300 ${isActive ? "text-zinc-800" : "text-zinc-500"}`}>
+                                                    <p className={`text-[13px] md:text-[14px] lg:text-[16px] leading-relaxed text-center font-normal transition-colors duration-300 ${isActive ? "text-zinc-800" : "text-zinc-500"}`}>
                                                         {study.problem}
                                                     </p>
                                                 </div>
                                             </div>
 
                                             {/* Solution Section - Only Visible on Mobile Stack */}
-                                            <div className={`relative overflow-hidden px-6 py-5 pt-3 pb-3 flex flex-col justify-center items-center text-center min-h-[200px] border-t md:hidden transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
+                                            <div className={`relative overflow-hidden px-4 py-3 pt-2 pb-2 flex flex-col justify-center items-center text-center min-h-[140px] border-t md:hidden transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
                                                 <img
                                                     src={study.solutionBg}
                                                     alt={`${study.title} Solution`}
@@ -275,7 +308,7 @@ export default function CaseStudy() {
                                                     <h4 className="text-emerald-600 text-[9px] font-bold uppercase tracking-[0.3em] mb-2 font-mono flex items-center justify-center gap-1.5">
                                                         <Lightbulb className="w-3.5 h-3.5" /> ZIPPY RESOLUTION
                                                     </h4>
-                                                    <p className="text-zinc-800 text-[14px] leading-relaxed text-center font-normal">
+                                                    <p className="text-zinc-800 text-[13px] leading-relaxed text-center font-normal">
                                                         {study.solution}
                                                     </p>
                                                 </div>
@@ -433,40 +466,8 @@ export default function CaseStudy() {
 
                     </div>
 
-                    {/* Mobile Center Button */}
-                    <div className="flex md:hidden justify-center mt-10 z-30 relative pointer-events-auto">
-                        <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="group relative focus:outline-none"
-                        >
-                            <div
-                                className="bg-zinc-900 p-[1px] transition-colors duration-300 group-hover:bg-zinc-700"
-                                style={{
-                                    clipPath: "polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px)"
-                                }}
-                            >
-                                <div
-                                    className="bg-[#ffe01b] pl-8 pr-4 py-3.5 flex items-center justify-between gap-6"
-                                    style={{
-                                        clipPath: "polygon(11px 0, calc(100% - 11px) 0, 100% 11px, 100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%, 0 calc(100% - 11px), 0 11px)"
-                                    }}
-                                >
-                                    <span className="text-zinc-950 font-sans font-bold tracking-[0.12em] text-xs uppercase">
-                                        EXPLORE FULL CASE STUDY
-                                    </span>
-                                    <div
-                                        className="w-8 h-8 bg-zinc-950 flex items-center justify-center text-white transition-transform duration-300 shrink-0"
-                                        style={{
-                                            clipPath: "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)"
-                                        }}
-                                    >
-                                        <ArrowUpRight className="w-4 h-4 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-white" />
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.button>
-                    </div>
+                    {/* Space padding */}
+                    <div className="pb-4" />
 
                 </div>
             </div>
