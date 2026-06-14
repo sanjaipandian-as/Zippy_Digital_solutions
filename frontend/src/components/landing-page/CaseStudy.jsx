@@ -154,7 +154,7 @@ export default function CaseStudy() {
                 />
 
                 {/* Content Container */}
-                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 relative z-20 flex flex-col justify-center">
+                <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 relative z-20 flex flex-col justify-between md:justify-center h-[88vh] md:h-auto py-4 md:py-0">
 
                     {/* ─── Top: Header Typography ─── */}
                     <div className="w-full text-center mb-8 lg:mb-14 flex flex-col items-center">
@@ -181,7 +181,7 @@ export default function CaseStudy() {
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative">
 
                         {/* Left Column - Staggered Challenge Cards (Curved like ) with upright flat cards) */}
-                        <div className="md:col-span-6 relative w-full h-[60vh] md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
+                        <div className="md:col-span-6 relative w-full h-[45vh] md:h-[70vh] flex flex-col items-start pb-8 md:pb-0 justify-center">
                             {caseStudies.map((study, index) => {
                                 const isActive = index === activeIndex;
                                 const diff = getDiff(index, activeIndex);
@@ -199,7 +199,7 @@ export default function CaseStudy() {
                                             scale: isActive ? 1.02 : 0.96,
                                             borderColor: "transparent",
                                             boxShadow: isMobile ? "0 10px 25px rgba(0, 0, 0, 0.4)" : "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
-                                            y: isMobile ? `calc(-50% + ${diff * 14}vh)` : `calc(-50% + ${diff * 18}vh)`,
+                                            y: isMobile ? `calc(-50% + ${diff * 10}vh)` : `calc(-50% + ${diff * 18}vh)`,
                                             x: isMobile ? "-50%" : (isLargeScreen ? `${-Math.abs(diff) * 22.22}%` : `${-Math.abs(diff) * 10.9}%`),
                                             backgroundColor: "#ffffff",
                                             pointerEvents: isActive ? "auto" : "none"
@@ -228,7 +228,7 @@ export default function CaseStudy() {
                                         }}
                                     >
                                         {/* Header */}
-                                        <div className="px-6 py-4 pb-0 flex flex-col items-center text-center w-full z-20 relative">
+                                        <div className="px-4 md:px-6 py-3 md:py-4 pb-0 flex flex-col items-center text-center w-full z-20 relative">
                                             <span className={`text-[10px] font-mono uppercase tracking-[0.15em] font-bold transition-colors duration-300 ${isActive ? "text-amber-700" : "text-zinc-500"}`}>
                                                 {isMobile ? study.sector : study.title}
                                             </span>
@@ -238,9 +238,9 @@ export default function CaseStudy() {
                                         </div>
 
                                         {/* Card Body */}
-                                        <div className={`grid grid-cols-1 border-t mt-3 relative z-10 flex-grow transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
+                                        <div className={`grid grid-cols-1 border-t mt-2 md:mt-3 relative z-10 flex-grow transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
                                             {/* Challenge Section */}
-                                            <div className="relative overflow-hidden px-6 py-4 pt-3 pb-3 flex flex-col justify-center items-center text-center flex-grow">
+                                            <div className="relative overflow-hidden px-4 md:px-6 py-3 md:py-4 pt-2 md:pt-3 pb-2 md:pb-3 flex flex-col justify-center items-center text-center flex-grow">
                                                 <img
                                                     src={study.problemBg}
                                                     alt={`${study.title} Problem`}
@@ -253,14 +253,14 @@ export default function CaseStudy() {
                                                     <h4 className={`text-[9px] font-bold uppercase tracking-[0.3em] mb-2 font-mono flex items-center justify-center gap-1.5 transition-colors duration-300 ${isActive ? "text-rose-600" : "text-rose-500/80"}`}>
                                                         <HelpCircle className="w-3.5 h-3.5" /> THE CHALLENGE
                                                     </h4>
-                                                    <p className={`text-[14px] lg:text-[16px] leading-relaxed text-center font-normal transition-colors duration-300 ${isActive ? "text-zinc-800" : "text-zinc-500"}`}>
+                                                    <p className={`text-[13px] md:text-[14px] lg:text-[16px] leading-relaxed text-center font-normal transition-colors duration-300 ${isActive ? "text-zinc-800" : "text-zinc-500"}`}>
                                                         {study.problem}
                                                     </p>
                                                 </div>
                                             </div>
 
                                             {/* Solution Section - Only Visible on Mobile Stack */}
-                                            <div className={`relative overflow-hidden px-6 py-5 pt-3 pb-3 flex flex-col justify-center items-center text-center min-h-[200px] border-t md:hidden transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
+                                            <div className={`relative overflow-hidden px-4 py-3 pt-2 pb-2 flex flex-col justify-center items-center text-center min-h-[140px] border-t md:hidden transition-colors duration-300 ${isActive ? "border-zinc-200" : "border-zinc-100"}`}>
                                                 <img
                                                     src={study.solutionBg}
                                                     alt={`${study.title} Solution`}
@@ -273,7 +273,7 @@ export default function CaseStudy() {
                                                     <h4 className="text-emerald-600 text-[9px] font-bold uppercase tracking-[0.3em] mb-2 font-mono flex items-center justify-center gap-1.5">
                                                         <Lightbulb className="w-3.5 h-3.5" /> ZIPPY RESOLUTION
                                                     </h4>
-                                                    <p className="text-zinc-800 text-[14px] leading-relaxed text-center font-normal">
+                                                    <p className="text-zinc-800 text-[13px] leading-relaxed text-center font-normal">
                                                         {study.solution}
                                                     </p>
                                                 </div>
